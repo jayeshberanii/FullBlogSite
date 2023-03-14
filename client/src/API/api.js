@@ -62,3 +62,15 @@ export const deleteblogfromserver=async(id)=>{
     .then(res=>console.log("delete blog successfully"))
     .catch(err=>console.log(err.message))
 }
+
+export const getuserBlogs=async id=>{
+    const response = await axios.get(`http://localhost:4000/blogs/?userid=${id}`);    
+    if(response.data.length>0){
+        console.log("fetch user successfully");     
+        console.log("userblogs",response.data);   
+        return response        
+        
+    }else{
+        console.log("no user found");
+    }
+}

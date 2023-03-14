@@ -3,15 +3,24 @@ import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import axios from "axios";
 import { addblogtoserver, deleteblogfromserver, getAllBlogs } from "../../API/api";
+import { Link, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-function BlogTable() {
+function BlogTable(props) {
+
+  const [User, setUserInfo] = useState({})
+  const UserInfo = useSelector((state) => state.userInfo);
+  useEffect(() => {
+    setUserInfo(UserInfo[0]);
+  }, [UserInfo]);
+
   const [Category, setCategory] = useState("");
 
   const [Disabledbtn, setDisabledbtn] = useState(true);
   const [Title, settitle] = useState("");
   const [Description, setdescription] = useState("");
-  const[deleteId,setdeleteID]=useState('')
-  const[Counter,setCounter]=useState(0)
+  const [deleteId, setdeleteID] = useState('')
+  const [Counter, setCounter] = useState(0)
 
   const optionlist = [
     "Food blogs",
@@ -26,9 +35,9 @@ function BlogTable() {
   const [rowData, setrowData] = useState([]);
   useEffect(() => {
     getAllBlogs().then((res) => {
-      if(res?.data!==undefined){
+      if (res?.data !== undefined) {
         setrowData(res.data)
-      }else{
+      } else {
         setrowData([])
       }
     })
@@ -51,19 +60,19 @@ function BlogTable() {
     console.log(params);
   };
 
-  const onDelete=(params)=>{
+  const onDelete = (params) => {
     setdeleteID(params.data.id)
   }
 
   const onDeleteitem = () => {
     deleteblogfromserver(deleteId);
     getAllBlogs().then((res) => {
-    if(res?.data!==undefined){
-      setrowData(res.data)
-    }else{
-      setrowData([])
-    }
-  })
+      if (res?.data !== undefined) {
+        setrowData(res.data)
+      } else {
+        setrowData([])
+      }
+    })
   };
   const [columnDefs] = useState([
     { field: "title", width: 200 },
@@ -73,21 +82,22 @@ function BlogTable() {
       field: "Action",
       sortable: false,
       filter: false,
+      
 
       cellRendererFramework: (params) => (
         <div className="">
-          <button
+          {/* <button
             className="btn btn-primary mb-3"
             onClick={() => onEdit(params)}
           >
             Edit
-          </button>
+          </button> */}
 
           <button
             data-bs-toggle="modal"
             data-bs-target="#deleteblogModal"
             className="btn btn-danger ms-2 mb-3"
-            onClick={()=>onDelete(params)}
+            onClick={() => onDelete(params)}
           >
             Delete
           </button>
@@ -98,45 +108,133 @@ function BlogTable() {
   const defaultColDef = useMemo(() => ({
     sortable: true,
     filter: true,
+    editable:true,
+    
   }));
 
   const onaddblogformSubmitHandler = async (e) => {
     e.preventDefault();
-    const obj = { category: Category, title: Title, description: Description };
+    const obj = { category: Category, title: Title, description: Description, userid: User.id };
     addblogtoserver(obj)
-    setCounter(Counter+1)
+    setCounter(Counter + 1)
     setCategory("");
     settitle("");
     setdescription("");
   };
   return (
-    <div className="center-align">
-      <div
-        className="ag-theme-alpine"
-        style={{ height: "400px", width: "100wh" }}
-      >
-        <button
-          type="button"
-          className="btn btn-primary m-3"
-          data-bs-toggle="modal"
-          data-bs-target="#AddBlogModal"
-        >
-          Add Blog
-        </button>
+    <>
 
+      <div className="center-align p-5">
         <div
-          className="modal fade"
-          id="AddBlogModal"
-          tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
+          className="ag-theme-alpine "
+          style={{ height: "400px", width: "100wh" }}
         >
-          <div className="modal-dialog">
-            <form onSubmit={(e) => onaddblogformSubmitHandler(e)}>
+          <button
+            type="button"
+            className="btn btn-warning m-3"
+            data-bs-toggle="modal"
+            data-bs-target="#AddBlogModal"
+          >
+            Add Blog
+          </button>
+
+          <div
+            className="modal fade"
+            id="AddBlogModal"
+            tabIndex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog">
+              <form onSubmit={(e) => onaddblogformSubmitHandler(e)}>
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLabel">
+                      Add Blog Details
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="mb-3">
+                      <select
+                        className="form-select"
+                        aria-label="Default select example"
+                        onChange={(e) => setCategory(e.target.value)}
+                        required
+                      >
+                        <option>Select Blog Category</option>
+                        {optionlist.map((item, pos) => {
+                          return (
+                            <option key={pos} value={item}>
+                              {item}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <label htmlFor="recipient-name" className="col-form-label">
+                        Title
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="recipient-name"
+                        onChange={(e) => settitle(e.target.value)}
+                        value={Title}
+                        required
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="message-text" className="col-form-label">
+                        Description
+                      </label>
+                      <textarea
+                        className="form-control"
+                        id="message-text"
+                        onChange={(e) => setdescription(e.target.value)}
+                        value={Description}
+                        required
+                      ></textarea>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      disabled={Disabledbtn}
+                      type="submit"
+                      data-bs-dismiss="modal"
+                      className="btn btn-primary"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div
+            className="modal fade"
+            id="deleteblogModal"
+            tabIndex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="exampleModalLabel">
-                    Add Blog Details
+                    Confirm delete
                   </h5>
                   <button
                     type="button"
@@ -145,48 +243,7 @@ function BlogTable() {
                     aria-label="Close"
                   ></button>
                 </div>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <select
-                      className="form-select"
-                      aria-label="Default select example"
-                      onChange={(e) => setCategory(e.target.value)}
-                      required
-                    >
-                      <option>Select Blog Category</option>
-                      {optionlist.map((item, pos) => {
-                        return (
-                          <option key={pos} value={item}>
-                            {item}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <label htmlFor="recipient-name" className="col-form-label">
-                      Title
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="recipient-name"
-                      onChange={(e) => settitle(e.target.value)}
-                      value={Title}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="message-text" className="col-form-label">
-                      Description
-                    </label>
-                    <textarea
-                      className="form-control"
-                      id="message-text"
-                      onChange={(e) => setdescription(e.target.value)}
-                      value={Description}
-                      required
-                    ></textarea>
-                  </div>
-                </div>
+                <div className="modal-body"></div>
                 <div className="modal-footer">
                   <button
                     type="button"
@@ -196,68 +253,26 @@ function BlogTable() {
                     Close
                   </button>
                   <button
-                    disabled={Disabledbtn}
-                    type="submit"
+                    type="button"
                     data-bs-dismiss="modal"
-                    className="btn btn-primary"
+                    className="btn btn-danger"
+                    onClick={() => onDeleteitem()}
                   >
-                    Add
+                    Delete
                   </button>
                 </div>
               </div>
-            </form>
-          </div>
-        </div>
-
-        <div
-          className="modal fade"
-          id="deleteblogModal"
-          tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">
-                  Confirm delete
-                </h5>
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div className="modal-body"></div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  data-bs-dismiss="modal"
-                  className="btn btn-danger"
-                  onClick={() => onDeleteitem()}
-                >
-                  Delete
-                </button>
-              </div>
             </div>
           </div>
-        </div>
 
-        <AgGridReact
-          rowData={rowData}
-          columnDefs={columnDefs}
-          defaultColDef={defaultColDef}
-        ></AgGridReact>
+          <AgGridReact
+            rowData={rowData}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
+          ></AgGridReact>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

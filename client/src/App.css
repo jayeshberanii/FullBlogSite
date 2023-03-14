@@ -8,3 +8,18 @@
   width: 500px;
   height: auto;
 }
+.nodata{
+  height: 90vh;
+}
+.nav-link{
+  color: blue;
+}
+.navbar{
+  box-shadow: 0 10px 10px rgba(46, 46, 46, 0.219);
+}
+.homelabel{
+  height: 75vh;
+}
+.blogsitetitle{
+  font-size: 150px;
+}

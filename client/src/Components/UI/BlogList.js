@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllBlogs } from "../../API/api";
 
-function BlogList() {
+function BlogList(props) {
   const [rowData, setrowData] = useState([]);
   console.log(rowData, "rowdata");
   useEffect(() => {
@@ -12,32 +12,26 @@ function BlogList() {
       {
         rowData.length ? rowData.map((item, pos) => {
           return (
-            <div key={pos} className="accordion m-5" id={`${item.title}`}>
-              <div className="accordion-item">
-                <h2 className="accordion-header" id="headingOne">
-                  <button className="accordion-button" type="button" >
-                    <figure className="mb-0">
-                      <blockquote className="blockquote mb-4">
-                        <strong>{item.title}</strong>
-                      </blockquote>
-                      <figcaption className="blockquote-footer mb-0">
-                        {item.category}
-                      </figcaption>
-                    </figure>
-                  </button>
-                </h2>
-                <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent={`#${item.title}`}>
-                  <div className="accordion-body">
-                    <p>{item.description}</p>
-                  </div>
+            <div className='d-flex align-items-center bg-warning'>
+            <div className='card w-100 d-flex justify-content-center px-5 py-4 mx-5 my-4 shadow'>
+                <div>
+                    <div className=''>
+                        <h4 className='card-title text-warning'>{item.title}</h4>
+                        <figcaption className="blockquote-footer mt-2 ms-3 mb-0">
+                            <i>{item.category}</i>
+                        </figcaption>
+                    </div>
+                    <div className='card-body'>
+                        <p className='card-text'>{item.description}</p>
+                    </div>
                 </div>
-              </div>
-            </div>
+            </div>            
+        </div> 
           )
-        }) : ''
+        }) :''
       }
     </>
-  );
+  )
 }
 
 export default BlogList;

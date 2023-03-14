@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Layout/Header'
 import { useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { Link, Navigate, Outlet } from 'react-router-dom'
 
-function Home() {
+function Home(props) {
+   
     const[UserInfo,setUserInfo]=useState({})
     const[headlist,setheadlist]=useState([])
     const userData=useSelector((state)=>{
@@ -24,8 +25,11 @@ function Home() {
     },[])
   return (
     <>
-    <Header headarr={headlist}/>    
-   <Outlet/>
+    {
+        <Header headarr={headlist}/>        
+    }
+   <div>
+   </div>
     </>   
   )
 }

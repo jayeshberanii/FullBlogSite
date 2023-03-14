@@ -21,7 +21,7 @@ const onRegisterFormSubmitHandler=(e)=>{
   return (
     <div className="card login-form border rounded d-flex align-items-center justify-content-center">
     <div>
-    <form className="p-3" onSubmit={(e)=>onRegisterFormSubmitHandler(e)}>
+    <form className="p-3 bg-light" onSubmit={(e)=>onRegisterFormSubmitHandler(e)}>
         <div className="mb-3">
             <label  className="form-label">First name</label>
             <input type="text" onChange={(e) => setFname(e.target.value)} value={Fname} className="form-control"  required/>
@@ -38,7 +38,7 @@ const onRegisterFormSubmitHandler=(e)=>{
             <label  className="form-label">Password</label>
             <input type="password" onChange={(e) => setPassword(e.target.value)} value={Password} className="form-control" required/>
         </div>               
-        <button type="submit" className="btn btn-primary">Register</button>
+        <button type="submit" className="btn btn-warning">Register</button>
         <div className="mt-2">
             <label  className="form-label">Already Registered <Link to='/login'><p className='text-primary'>Login here</p></Link></label>
         </div>                
