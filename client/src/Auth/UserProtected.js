@@ -6,9 +6,9 @@ const UserProtected = ({children}) => {
     const user = useSelector((state) => state.userInfo);
     let location = useLocation();
 
-    if(!user[0]) {
+    if(!user._id) {
         return <Navigate to="/login" state={{ from: location}} replace />
-    }else if(user[0].usertype=="user"){
+    }else if(user.userType=="user"){
         return children
     }else return <Navigate to="/" state={{ from: location}} replace />
 

@@ -10,9 +10,9 @@ function BlogList(props) {
   return (
     <>
       {
-        rowData.length ? rowData.map((item, pos) => {
+        rowData ? rowData.map((item, pos) => {
           return (
-            <div className='d-flex align-items-center bg-warning'>
+            <div key={pos} className='d-flex align-items-center bg-warning'>
             <div className='card w-100 d-flex justify-content-center px-5 py-4 mx-5 my-4 shadow'>
                 <div>
                     <div className=''>

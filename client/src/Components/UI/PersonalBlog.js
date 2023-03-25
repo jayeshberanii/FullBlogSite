@@ -1,16 +1,12 @@
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { addblogtoserver, deleteblogfromserver, getAllBlogs } from "../../API/api";
+import { addblogtoserver, deleteblogfromserver, getAllBlogs, getPersonalBlogs } from "../../API/api";
 import { useSelector } from "react-redux";
 
-function BlogTable(props) {
+function PersonalBlog() {
 
-  const [User, setUserInfo] = useState({})
-  const UserInfo = useSelector((state) => state.userInfo);
-  useEffect(() => {
-    setUserInfo(UserInfo[0]);
-  }, [UserInfo]);
+
 
   const [Category, setCategory] = useState("");
 
@@ -32,7 +28,7 @@ function BlogTable(props) {
 
   const [rowData, setrowData] = useState([]);
   useEffect(() => {
-    getAllBlogs().then((res) => {
+    getPersonalBlogs().then((res) => {
       if (res?.data !== undefined) {        
         setrowData(res.data)
       } else {
@@ -288,4 +284,4 @@ function BlogTable(props) {
   );
 }
 
-export default BlogTable;
+export default PersonalBlog;

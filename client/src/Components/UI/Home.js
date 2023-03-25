@@ -12,10 +12,10 @@ function Home(props) {
     })
     useEffect(()=>{
         console.log(UserInfo);
-        if(UserInfo[0]?.usertype=="admin"){
-            setheadlist(["user","blogs"])
-        }else if(UserInfo[0]?.usertype=="user"){
-            setheadlist(["blogList"])
+        if(UserInfo?.userType=="admin"){
+            setheadlist(["user","blogs",])
+        }else if(UserInfo?.userType=="user"){
+            setheadlist(["blogList","myBlogs"])
         }else{
             setheadlist([])
         }

@@ -12,8 +12,9 @@ import BlogList from './Components/UI/BlogList';
 import Home from './Components/UI/Home';
 import Login from './Components/UI/Login';
 import Main from './Components/UI/Main';
+import PersonalBlog from './Components/UI/PersonalBlog';
 import Register from './Components/UI/Register';
-import { setUserInfo } from './Redux/Slices/userInfoSlice';
+// import { setUserInfo } from './Redux/Slices/userInfoSlice';
 
 function App() {
   const [isUser, setUserInfo] = useState(false)
@@ -40,6 +41,10 @@ function App() {
           <Route path='/blogList' element={
             <UserProtected>
               <BlogList />
+            </UserProtected>} />
+            <Route path='/myBlogs' element={
+            <UserProtected>
+              <PersonalBlog />
             </UserProtected>} />
           <Route path='/blogs' element={
             <AdminProtected>

@@ -20,14 +20,14 @@ function Header(props) {
   };
   return (
     <>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <Link class="navbar-brand ms-5 mb-0 text-center" to='/'><h3><span className="text-warning">BLOG</span> SITE</h3></Link>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+          <Link className="navbar-brand ms-5 mb-0 text-center" to='/'><h3><span className="text-warning">BLOG</span> SITE</h3></Link>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto">
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0 mx-auto">
               <li className="nav-item">
                 <Link className="nav-link" aria-current="page" to="/">
                   Home
@@ -43,8 +43,8 @@ function Header(props) {
                 );
               })}
             </ul>
-            <form class="d-flex">
-              <button class="btn btn-dark me-5" type="button"
+            <form className="d-flex">
+              <button className="btn btn-dark me-5" type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal">
                 Logout

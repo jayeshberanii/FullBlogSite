@@ -26,7 +26,7 @@ function Login() {
         if(user){
             setisValid(true)
         }
-        dispatch(setUserInfo(user.data))
+        dispatch(setUserInfo(user))
     }
     return (
         <div className="card login-form border rounded d-flex align-items-center justify-content-center">
