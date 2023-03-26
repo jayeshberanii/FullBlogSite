@@ -40,9 +40,10 @@ function UserTable(props) {
     { field: "fname" },
     { field: "lname" },
     { field: "email" },
-    { field: "password" },
+    { field: "userType" },
     {
       field: "Action",
+      maxWidth:200,
       sortable: false,
       filter: false,
       cellRendererFramework: (params) => (
@@ -53,12 +54,15 @@ function UserTable(props) {
           >
             Edit
           </button> */}
-          <button
+          {
+            params.data.userType!=='admin'?<button
             className="btn btn-danger ms-2 mb-3"
             onClick={() => onDelete(params)}
           >
             Delete
-          </button>
+          </button>:<></>
+          }
+          
         </div>
       ),
     },
@@ -66,30 +70,31 @@ function UserTable(props) {
   const defaultColDef = useMemo(() => ({
     sortable: true,
     filter: true,
-    width: 250
+    minWidth: 200,
+    flex:1
   }));
 
   const onEdit = (params) => {
     console.log(params);
   };
-  const onDelete = (params) => {
-    deleteuserfromserver(params.data.id)
-    getAllUsers().then((res) => {
-      if (res?.data !== undefined) {
-        setrowData(res.data)
-      } else {
-        setrowData([])
-      }
+  const onDelete = async(params) => {
+    await deleteuserfromserver(params.data._id)
+    .then(res=>{
+      setTimeout(()=>{
+        setCounter(Counter+1)
+      },500)
     })
   };
-  const onDeleteUserHandler = () => {
-
-  }
-  const onformSubmitHandler = (e) => {
+ 
+  const onformSubmitHandler =async (e) => {
     e.preventDefault();
-    const obj = { fname: Fname, lname: Lname, email: Email, password: Password, usertype: "user" };
-    registerUser(obj)
-    setCounter(Counter + 1)
+    const obj = { fname: Fname, lname: Lname, email: Email, password: Password, userType: "user" };
+    await registerUser(obj).then(res=>{
+      setTimeout(()=>{
+        setCounter(Counter+1)
+      },500)
+    })
+    // setCounter(Counter + 1)
     setFname('')
     setLname('')
     setEmail('')

@@ -10,7 +10,7 @@ function Register() {
 
 const onRegisterFormSubmitHandler=(e)=>{
     e.preventDefault()
-    const obj={fname:Fname,lname:Lname,email:Email,password:Password,usertype:"user"}
+    const obj={fname:Fname,lname:Lname,email:Email,password:Password,userType:"user"}
     registerUser(obj)
     setFname('')
     setLname('')

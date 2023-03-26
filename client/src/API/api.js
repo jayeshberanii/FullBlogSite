@@ -31,7 +31,7 @@ export const loginUser = async (obj) => {
 
 export const getAllUsers = async () => {
   const token = localStorage.getItem("token");
-  const response = await axios.get(`http://localhost:4000/users`, {
+  const response = await instance.post(`/users/`, {
     token: token,
   });
   if (response.data.length > 0) {
@@ -65,8 +65,9 @@ export const addblogtoserver = async (obj) => {
 };
 
 export const deleteuserfromserver = async (id) => {
-  axios
-    .delete(`http://localhost:4000/users/${id}`)
+  const token = localStorage.getItem("token");
+  instance
+    .delete(`/users/${id}`)
     .then((res) => console.log("delete user successfully"))
     .catch((err) => console.log(err.message));
 };
@@ -74,10 +75,11 @@ export const deleteuserfromserver = async (id) => {
 //delete blog
 export const deleteblogfromserver = async (id) => {
 //   const token = localStorage.getItem("token");
-  instance
+  const response=instance
     .delete(`/todos/${id}`)
     .then((res) => console.log("delete blog successfully"))
     .catch((err) => console.log(err.message));
+    return response
 };
 
 export const getuserBlogs = async (id) => {

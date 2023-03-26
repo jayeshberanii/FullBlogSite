@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 //register
 const registerUser = async (req, res) => {
   try {
-    const { fname, lname, email, password } = req.body;
+    const { fname, lname, email, password,userType } = req.body;
     const salt = await Bcrypt.genSalt(10);
     const hassedPassword = await Bcrypt.hash(password, salt);
     let user = await User.findOne({ email: email });
@@ -17,6 +17,7 @@ const registerUser = async (req, res) => {
         lname,
         email,
         password: hassedPassword,
+        userType
       });
       await user.save();
 
@@ -80,6 +81,18 @@ const getMe = async (req, res) => {
   }
 };
 
+//get all users
+const getUsers=async(req, res) => {
+  try {
+    const users = await User.find();
+    // const { password: pass, ...rest } = user._doc;
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 //updateUserDetails
 const updateUserDetails = async (req, res) => {
   const { name, email, age } = req.body;
@@ -137,13 +150,13 @@ const updateUserPassword = async (req, res) => {
 //deleterUser
 const deleterUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user);
-    if (!user) {
-      res.status(404).json({ msg: "user not Found" });
-    } else {
-      await User.deleteOne({ user });
+    // const user = await User.findById(req.user);
+    // if (!user) {
+    //   res.status(404).json({ msg: "user not Found" });
+    // } else {
+      await User.deleteOne({_id:req.params.id});
       res.status(200).json({ msg: "user deleted" });
-    }
+    // }
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ msg: error.message });
@@ -158,4 +171,5 @@ module.exports = {
   updateUserDetails,
   updateUserPassword,
   deleterUser,
+  getUsers
 };
