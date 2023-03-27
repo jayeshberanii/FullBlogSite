@@ -15,11 +15,62 @@
   color: blue;
 }
 .navbar{
-  box-shadow: 0 10px 10px rgba(46, 46, 46, 0.219);
+  box-shadow: 0 10px 10px rgba(46, 46, 46, 0.219);  
+  background:#363538;
 }
 .homelabel{
   height: 75vh;
 }
 .blogsitetitle{
-  font-size: 150px;
+  font-size: 120px;
+}
+.text-center * {
+  justifyContent: center
+}
+.footer{
+  background:#363538;
+  position: fixed;
+  width: 100%;
+  top: 88%;  
+  box-shadow: 10px 10px 10px 25px #49484854;
+}
+.bloglist{
+  background: #8D8C8A;
+}
+.bg-none{
+  background: none;
+}
+
+.bg-teal{
+  background: #52D6F4;
+}
+.textteal{
+  color: #52D6F4;;
+}
+.bg-blue{
+  background: #408697;
+}
+.textblue{
+  color: #408697;
+}
+.bgblack{
+  background:#363538;
+}
+.textblack{
+  color: #363538;
+}
+.bggrey{
+  background:#8D8C8A;
+}
+.textgrey{
+  color: #8D8C8A;;
+}
+.textwhite{
+  color: #F6F6F6;
+}
+.bg-white{
+  background: #F6F6F6;
+}
+.nav-link:focus{
+  color: #52D6F4;;
 }

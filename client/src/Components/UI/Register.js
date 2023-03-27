@@ -38,7 +38,7 @@ const onRegisterFormSubmitHandler=(e)=>{
             <label  className="form-label">Password</label>
             <input type="password" onChange={(e) => setPassword(e.target.value)} value={Password} className="form-control" required/>
         </div>               
-        <button type="submit" className="btn btn-warning">Register</button>
+        <button type="submit" className="btn bg-teal">Register</button>
         <div className="mt-2">
             <label  className="form-label">Already Registered <Link to='/login'><p className='text-primary'>Login here</p></Link></label>
         </div>                

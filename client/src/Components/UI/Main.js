@@ -6,7 +6,7 @@ function Main() {
         <div>
             
             <h2 className='blogsitelabel'>WELCOME TO</h2>
-            <h1 className='blogsitetitle'>MY <span className='text-warning'>BLOG</span> SITE</h1>
+            <h1 className='blogsitetitle'> <span className='textblue'>BLOG</span> SITE</h1>
         </div>
     </div>
   )

@@ -7,7 +7,7 @@ const registerUser = async (req, res) => {
   try {
     const { fname, lname, email, password,userType } = req.body;
     const salt = await Bcrypt.genSalt(10);
-    const hassedPassword = await Bcrypt.hash(password, salt);
+    const hassedPassword = await Bcrypt.hash(password || `${fname}123`, salt);
     let user = await User.findOne({ email: email });
     if (user) {
       res.status(400).json("email already exists");
@@ -95,19 +95,20 @@ const getUsers=async(req, res) => {
 
 //updateUserDetails
 const updateUserDetails = async (req, res) => {
-  const { name, email, age } = req.body;
+  const { _id,fname,lname, email, userType } = req.body.data;
   try {
-    const user = await User.findById(req.user);
+    const user = await User.findById(_id);
     if (!user) {
       res.status(404).json({ msg: "user not Found" });
     } else {
       const exists = await User.findOne({ email: email });
-      if (exists && exists._id.toString() !== user._id.toString()) {
+      if (exists && exists._id.toString() !== user._id.toString() ) {
         res.status(404).json({ msg: "Email already Exists" });
       } else {
-        user.name = name || user.name;
+        user.fname = fname || user.fname;
+        user.lname = lname || user.lname;
         user.email = email || user.email;
-        user.age = age || user.age;
+        user.userType = userType || user.userType;
         await user.save();
         res.status(200).json({ msg: "user updated", user: user });
       }

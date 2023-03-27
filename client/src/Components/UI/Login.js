@@ -16,7 +16,7 @@ function Login() {
         if(isvalid){
             navigation('/')
         }
-    },[isvalid])
+    },[isvalid,navigation])
 
 
     const onLoginFormSubmitHandler=async(e)=>{
@@ -40,7 +40,7 @@ function Login() {
                         <label className="form-label">Password</label>
                         <input type="password" onChange={(e) => setPassword(e.target.value)} value={Password} className="form-control" required />
                     </div>
-                    <button type="submit" className="btn btn-warning">Login</button>
+                    <button type="submit" className="btn bg-teal">Login</button>
                     <div className="mt-2">
                         <label htmlFor="exampleInputPassword1" className="form-label">Not user <Link to='/Register'><p className="text-primary">Register user</p></Link></label>
                     </div>

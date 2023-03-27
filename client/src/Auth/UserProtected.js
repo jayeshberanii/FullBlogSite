@@ -8,7 +8,7 @@ const UserProtected = ({children}) => {
 
     if(!user._id) {
         return <Navigate to="/login" state={{ from: location}} replace />
-    }else if(user.userType=="user"){
+    }else if(user.userType==="user"){
         return children
     }else return <Navigate to="/" state={{ from: location}} replace />
 

@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { logoutuser } from "../../Redux/Slices/userInfoSlice";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import Footer from "./Footer";
 
 function Header(props) {
-  const [User, setUser] = useState({});
+  // const [User, setUser] = useState({});
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const UserInfo = useSelector((state) => state.userInfo);
-  useEffect(() => {
-    setUser(UserInfo);
-  }, [UserInfo]);
+  // const UserInfo = useSelector((state) => state.userInfo);
+  // useEffect(() => {
+  //   setUser(UserInfo);
+  // }, [UserInfo]);
   const onlogoutHandler = () => {
     dispatch(logoutuser());
     navigate('/login')
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand ms-5 mb-0 text-center" to='/'><h3><span className="text-warning">BLOG</span> SITE</h3></Link>
+          <Link className="navbar-brand ms-5 mb-0 text-center text-white" to='/'><h3><span className="textteal">BLOG</span> SITE</h3></Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -36,7 +36,7 @@ function Header(props) {
               {props.headarr.map((item, pos) => {
                 return (
                   <li className="nav-item" key={pos}>
-                    <Link className="nav-link" to={`/${item}`}>
+                    <Link className="nav-link " to={`/${item}`}>
                       {item[0].toUpperCase()}{item.slice(1)}
                     </Link>
                   </li>
@@ -44,10 +44,10 @@ function Header(props) {
               })}
             </ul>
             <form className="d-flex">
-              <button className="btn btn-dark me-5" type="button"
+            <button className="btn btn-secondary me-5" type="button"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal">
-                Logout
+                  <i className="fa-solid fa-right-from-bracket"></i>
               </button>
               <div
                 className="modal fade"
@@ -69,7 +69,7 @@ function Header(props) {
                         aria-label="Close"
                       ></button>
                     </div>
-                    <div className="modal-body">...</div>
+                    <div className="modal-body">Are you sure you want to Logout?</div>
                     <div className="modal-footer">
                       <button
                         type="button"

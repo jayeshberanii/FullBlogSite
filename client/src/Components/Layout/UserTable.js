@@ -1,41 +1,59 @@
 import { AgGridReact } from "ag-grid-react";
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import { deleteuserfromserver, getAllUsers, registerUser } from "../../API/api";
+import {
+  deleteuserfromserver,
+  editusertoserver,
+  getAllUsers,
+  registerUser,
+} from "../../API/api";
 
 function UserTable(props) {
- 
   const [Deleteitem, setDeleteitem] = useState("");
   const [Disabledbtn, setDisabledbtn] = useState(true);
   const [Fname, setFname] = useState("");
   const [Lname, setLname] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [userType, setUserType] = useState("");
   const [Counter, setCounter] = useState(0);
   const [rowData, setrowData] = useState([]);
+  const [editData, setEditData] = useState({});
+  const [editCounter, setEditCounter] = useState("");
   useEffect(() => {
     if (
       Fname !== "" &&
       Lname !== undefined &&
-      Email !== "" &&
-      Password !== ""
+      Email !== ""       
     ) {
       setDisabledbtn(false);
     } else {
       setDisabledbtn(true);
     }
-  }, [Fname, Lname, Email, Password]);
+  }, [Fname, Lname, Email]);
+
   useEffect(() => {
-    console.log("get all users");
     getAllUsers().then((res) => {
       if (res?.data !== undefined) {
-        setrowData(res.data)
+        setrowData(res.data);
       } else {
-        setrowData([])
+        setrowData([]);
       }
-    })
-
+    });
   }, [Counter]);
+
+  useEffect(() => {
+    let userLabel = document.getElementById("user-label");
+    let userBtn = document.getElementById("user-btn");
+    userLabel.innerHTML = "Edit User Details";
+    userBtn.innerHTML = "Edit";
+    setFname(editData.fname);
+    setLname(editData.lname);
+    setEmail(editData.email);
+    setPassword(editData.password);
+    setUserType(editData.userType);
+    setEditCounter("");
+  }, [editData, editCounter]);
+
   const [columnDefs] = useState([
     { field: "fname" },
     { field: "lname" },
@@ -43,23 +61,28 @@ function UserTable(props) {
     { field: "userType" },
     {
       field: "Action",
-      maxWidth:200,
+      maxWidth: 200,
       sortable: false,
       filter: false,
       cellRendererFramework: (params) => (
         <div className="">
-          {/* <button
-            className="btn btn-primary mb-3"
+          <button
+            className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onEdit(params)}
+            data-bs-toggle="modal"
+            data-bs-target="#AdduserModal"
           >
-            Edit
-          </button> */}
+            <i className="fa-solid fa-pen-to-square text-primary"></i>
+          </button>
           {
-            params.data.userType!=='admin'?<button
-            className="btn btn-danger ms-2 mb-3"
+            params.data.userType!=='admin'?
+            <button
+            data-bs-toggle="modal"
+            data-bs-target="#deleteblogModal"
+            className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onDelete(params)}
           >
-            Delete
+            <i className="fa-solid fa-trash text-danger"></i>
           </button>:<></>
           }
           
@@ -67,51 +90,89 @@ function UserTable(props) {
       ),
     },
   ]);
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    minWidth: 200,
-    flex:1
-  }));
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      minWidth: 200,
+      flex: 1,
+    }),
+    []
+  );
 
   const onEdit = (params) => {
-    console.log(params);
+    setEditCounter(params.data._id);
+    setEditData(params.data);
   };
-  const onDelete = async(params) => {
-    await deleteuserfromserver(params.data._id)
-    .then(res=>{
-      setTimeout(()=>{
-        setCounter(Counter+1)
-      },500)
-    })
+  const onDelete = (params) => {
+    setDeleteitem(params.data._id);
   };
- 
-  const onformSubmitHandler =async (e) => {
+  const onDeleteitem = async () => {
+    await deleteuserfromserver(Deleteitem).then((res) => {
+      setTimeout(() => {
+        setCounter(Counter + 1);
+      }, 100);
+    });
+  };
+  const onAddUserHandler = () => {
+    let userLabel = document.getElementById("user-label");
+    let userBtn = document.getElementById("user-btn");
+    userLabel.innerHTML = "Add User Details";
+    userBtn.innerHTML = "Add";
+    setFname("");
+    setLname("");
+    setEmail("");
+    setPassword("");
+  };
+  const onformSubmitHandler = async (e) => {
     e.preventDefault();
-    const obj = { fname: Fname, lname: Lname, email: Email, password: Password, userType: "user" };
-    await registerUser(obj).then(res=>{
-      setTimeout(()=>{
-        setCounter(Counter+1)
-      },500)
-    })
-    // setCounter(Counter + 1)
-    setFname('')
-    setLname('')
-    setEmail('')
-    setPassword('')
+    let userBtn = document.getElementById("user-btn");
+    if (userBtn.textContent === "Add") {
+      const obj = {
+        fname: Fname,
+        lname: Lname,
+        email: Email,
+        password: Password,
+        userType: userType,
+      };
+      await registerUser(obj).then((res) => {
+        setTimeout(() => {
+          setCounter(Counter + 1);
+        }, 100);
+      });
+    } else if (userBtn.textContent === "Edit") {
+      const obj = {
+        _id: editData._id,
+        fname: Fname,
+        lname: Lname,
+        email: Email,
+        password: Password,
+        userType: userType,
+      };
+      editusertoserver(obj).then((res) => {
+        setTimeout(() => {
+          setCounter(Counter + 1);
+        }, 100);
+      });
+    }
+    setFname("");
+    setLname("");
+    setEmail("");
+    setPassword("");
   };
+  const optionlist = ["user", "admin"];
   return (
     <>
-
       <div
         className="ag-theme-alpine p-5"
         style={{ height: "400px", width: "100wh" }}
       >
         <button
           type="button"
-          className="btn btn-warning m-3"
+          className="btn bg-teal m-3"
           data-bs-toggle="modal"
           data-bs-target="#AdduserModal"
+          onClick={onAddUserHandler}
         >
           Add New User
         </button>
@@ -127,7 +188,7 @@ function UserTable(props) {
             <form onSubmit={(e) => onformSubmitHandler(e)}>
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLabel">
+                  <h5 className="modal-title" id="user-label">
                     Add Blog Details
                   </h5>
                   <button
@@ -147,7 +208,7 @@ function UserTable(props) {
                       onChange={(e) => setFname(e.target.value)}
                       id="fname"
                       className="form-control"
-                      value={Fname}
+                      value={Fname || ""}
                     />
                   </div>
                   <div className="mb-3">
@@ -159,7 +220,7 @@ function UserTable(props) {
                       onChange={(e) => setLname(e.target.value)}
                       id="lname"
                       className="form-control"
-                      value={Lname}
+                      value={Lname || ""}
                     />
                   </div>
                   <div className="mb-3">
@@ -171,20 +232,29 @@ function UserTable(props) {
                       onChange={(e) => setEmail(e.target.value)}
                       id="email"
                       className="form-control"
-                      value={Email}
+                      value={Email || ""}
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="password" className="form-label">
-                      Password
+                    <label htmlFor="usertype" className="form-label">
+                      User Type
                     </label>
-                    <input
-                      type="passwword"
-                      onChange={(e) => setPassword(e.target.value)}
-                      id="password"
-                      className="form-control"
-                      value={Password}
-                    />
+                    <select
+                      className="form-select"
+                      aria-label="Default select example"
+                      onChange={(e) => setUserType(e.target.value)}
+                      value={userType || ""}
+                      id="blog-usertype"
+                      required
+                    >
+                      {optionlist.map((item, pos) => {
+                        return (
+                          <option key={pos} value={item}>
+                            {item}
+                          </option>
+                        );
+                      })}
+                    </select>
                   </div>
                 </div>
                 <div className="modal-footer">
@@ -199,7 +269,8 @@ function UserTable(props) {
                     disabled={Disabledbtn}
                     type="submit"
                     data-bs-dismiss="modal"
-                    className="btn btn-primary"
+                    className="btn bg-teal"
+                    id="user-btn"
                   >
                     Add
                   </button>
@@ -208,12 +279,56 @@ function UserTable(props) {
             </form>
           </div>
         </div>
+        <div
+          className="modal fade"
+          id="deleteblogModal"
+          tabIndex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Confirm delete
+                </h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                Are you sure you want to delete user?
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  data-bs-dismiss="modal"
+                  className="btn btn-danger"
+                  onClick={() => onDeleteitem()}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
         ></AgGridReact>
-      </div>:
+      </div>
+      :
     </>
   );
 }

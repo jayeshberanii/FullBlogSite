@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../Layout/Header'
 import { useSelector } from 'react-redux'
-import { Link, Navigate, Outlet } from 'react-router-dom'
 
 function Home(props) {
    
@@ -10,11 +9,10 @@ function Home(props) {
     const userData=useSelector((state)=>{
         return state.userInfo
     })
-    useEffect(()=>{
-        console.log(UserInfo);
-        if(UserInfo?.userType=="admin"){
-            setheadlist(["user","blogs",])
-        }else if(UserInfo?.userType=="user"){
+    useEffect(()=>{        
+        if(UserInfo?.userType==="admin"){
+            setheadlist(["user","blogs","myBlogs"])
+        }else if(UserInfo?.userType==="user"){
             setheadlist(["blogList","myBlogs"])
         }else{
             setheadlist([])
@@ -22,7 +20,7 @@ function Home(props) {
     },[UserInfo])
     useEffect(()=>{
         setUserInfo(userData);
-    },[])
+    },[userData])
   return (
     <>
     {

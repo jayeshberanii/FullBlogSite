@@ -72,12 +72,12 @@ const createTodo = async (req, res) => {
 const updateTodo = async (req, res) => {
   const user = await User.findById(req.user);
   try {
-    const { title, description, completed } = req.body;
+    const { title, description, category } = req.body.data;
     const user = await User.findById(req.user);
     if (
       title !== undefined ||
       description !== undefined ||
-      completed !== undefined
+      category !== undefined
     ) {
       if (!user) {
         res.status(404).json({ msg: "user not Found!" });
@@ -90,7 +90,7 @@ const updateTodo = async (req, res) => {
         } else {
           todo.title = title || todo.title;
           todo.description = description || todo.description;
-          todo.completed = completed || todo.completed;
+          todo.category = category || todo.category;
           await todo.save();
           res
             .status(200)
