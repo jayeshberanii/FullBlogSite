@@ -11,5 +11,6 @@ route.post('/',Authorize,getUsers)
 route.post('/updateuserdetails',Authorize,updateUserDetails)
 route.get('/updatepassword',Authorize,updateUserPassword)
 route.delete('/:id',deleterUser)
+route.get('/signgoogle',)
 
 module.exports=route
