@@ -7,7 +7,7 @@ Passport.use(new Strategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: '/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
-    const exists = await User.findOne({ googleId: profile.id })
+    const exists = await User.findOne({ email: profile.emails[0].value })
     if (exists) {
         done(null, exists)
     } else {
@@ -23,7 +23,7 @@ Passport.use(new Strategy({
 Passport.serializeUser((user, done) => {
     console.log("passport serialized");
     done(null, user.id);
-});
+})
 
 Passport.deserializeUser((id, done) => {
     console.log("passport deserialized");

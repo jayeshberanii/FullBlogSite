@@ -46,7 +46,7 @@ export const getAllBlogs = async () => {
   const token = localStorage.getItem("token");
   const response = await instance.post(`/todos/`, { token: token });
   if (response?.data.length > 0) {
-    console.log("fetch blogs successfully");   
+    console.log("fetch blogs successfully");
     return response;
   } else {
     console.log("no blog found");
@@ -64,7 +64,7 @@ export const addblogtoserver = async (obj) => {
 };
 
 //delete user
-export const deleteuserfromserver = async (id) => {  
+export const deleteuserfromserver = async (id) => {
   instance
     .delete(`/users/${id}`)
     .then((res) => console.log("delete user successfully"))
@@ -73,12 +73,12 @@ export const deleteuserfromserver = async (id) => {
 
 //delete blog
 export const deleteblogfromserver = async (id) => {
-//   const token = localStorage.getItem("token");
-  const response=instance
+  //   const token = localStorage.getItem("token");
+  const response = instance
     .delete(`/todos/${id}`)
     .then((res) => console.log("delete blog successfully"))
     .catch((err) => console.log(err.message));
-    return response
+  return response
 };
 
 //get all users
@@ -95,19 +95,19 @@ export const getuserBlogs = async (id) => {
 
 //get personal blogs
 export const getPersonalBlogs = async () => {
-    const token = localStorage.getItem("token");
-    const response = await instance.post(`/todos/personal`, { token: token });
-    if (response?.data.length > 0) {
-      console.log("fetch personal blogs successfully");      
-      return response;
-    } else {
-      console.log("no blog found");
-      return [];
-    }
-  };
+  const token = localStorage.getItem("token");
+  const response = await instance.post(`/todos/personal`, { token: token });
+  if (response?.data.length > 0) {
+    console.log("fetch personal blogs successfully");
+    return response;
+  } else {
+    console.log("no blog found");
+    return [];
+  }
+};
 
 //edit blog
-export const editblogtoserver=async(obj)=>{
+export const editblogtoserver = async (obj) => {
   const token = localStorage.getItem("token");
   await instance
     .put(`/todos/${obj.blogId}`, { data: obj, token: token })
@@ -116,10 +116,20 @@ export const editblogtoserver=async(obj)=>{
 }
 
 //edit user
-export const editusertoserver=async(obj)=>{  
+export const editusertoserver = async (obj) => {
   const token = localStorage.getItem("token");
   await instance
     .post(`/users/updateuserdetails`, { data: obj, token: token })
-    .then((res)=>console.log("user updated successfully"))
+    .then((res) => console.log("user updated successfully"))
     .catch((err) => console.log(err.message));
+}
+
+//get user
+export const getUserDetails = async () => {
+  const token = localStorage.getItem("token");
+  const response = await instance
+    .post(`/users/get`, { token: token })
+    .then((res) => res.data)
+    .catch((err) => console.log(err.message));    
+    return response;
 }

@@ -12,6 +12,7 @@ import Home from './Components/UI/Home';
 import Login from './Components/UI/Login';
 import Main from './Components/UI/Main';
 import PersonalBlog from './Components/UI/PersonalBlog';
+import Profile from './Components/UI/Profile';
 import Register from './Components/UI/Register';
 // import { setUserInfo } from './Redux/Slices/userInfoSlice';
 
@@ -41,7 +42,7 @@ function App() {
             <UserProtected>
               <BlogList />
             </UserProtected>} />
-            <Route path='/myBlogs' element={
+          <Route path='/myBlogs' element={
             <ProtectedRoute>
               <PersonalBlog />
             </ProtectedRoute>} />
@@ -53,11 +54,16 @@ function App() {
             <AdminProtected>
               <UserTable />
             </AdminProtected>} />
-          
+          <Route path='/profile' element={
+            <ProtectedRoute>
+              <Profile/>
+            </ProtectedRoute>} />
+
           <Route path='*' element={
-          <ProtectedRoute>
-            <Navigate to="/"/>
-          </ProtectedRoute>} />
+            <ProtectedRoute>
+              <Navigate to="/" />
+            </ProtectedRoute>} />
+
         </Route>
       </Routes>
     </BrowserRouter>

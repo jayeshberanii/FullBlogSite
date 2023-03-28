@@ -74,3 +74,27 @@
 .nav-link:focus{
   color: #52D6F4;;
 }
+.profile{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background: #408697;
+  /* margin-right: 100px; */
+}
+.profile>img{
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+.navul{
+  height: 90vh;
+}
+.uProfile{
+  height: 50vh;
+  width: 100%;
+}
+.profile-img{
+  height: 12rem;
+  width: 12rem;
+  border-radius: 50%;
+}

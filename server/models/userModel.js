@@ -18,6 +18,10 @@ password:{
     type:String,
     require:true
 },
+pic:{
+    type:String,
+    default:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYL0P24lyWNtnwKoAaMhbpaDUctiDXj_ttlg&usqp=CAU'
+},
 userType:{
     type:String,
     default:"user"
