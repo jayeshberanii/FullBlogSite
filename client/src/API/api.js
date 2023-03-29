@@ -1,7 +1,8 @@
 import axios from "axios";
+import emailjs from '@emailjs/browser'
 
 const instance = axios.create({
-  baseURL: "http://localhost:4000/api",
+  baseURL: "http://192.168.2.53:4000/api"
 });
 
 export const registerUser = async (obj) => {
@@ -130,6 +131,52 @@ export const getUserDetails = async () => {
   const response = await instance
     .post(`/users/get`, { token: token })
     .then((res) => res.data)
-    .catch((err) => console.log(err.message));    
-    return response;
+    .catch((err) => console.log(err.message));
+  return response;
+}
+
+//reset password
+
+export const resetPassword = async (User) => {
+  const token = localStorage.getItem("token");
+  const response = await instance.post('users/resetpass', { token: token })
+    .then(async res => {
+      var templateParams = {
+        from_name: 'jayesh berani',
+        to_name: User?.fname,
+        message: `http://localhost:3000/reset/${res.data.tokenId}`,
+        reply_to: User?.email
+      };
+    
+      await emailjs.send('service_7toysxb', 'template_uctg68m', templateParams, 'z9NvAPwQQGiMOgMi2')
+        .then(response => {
+          console.log('SUCCESS!', response.status, response.text);
+    
+        }).catch(error => {
+          console.log('FAILED...', error);
+    
+        })
+    })
+    .catch(err => console.log(err)) 
+}
+
+export const checkExpiry = async (id) => {
+  const response = await instance.put(`users/checkexpiry/${id}`)
+    .then(res => res.data)
+    .catch(err => console.error(err.message))
+  return response
+}
+
+export const changePassword=async (password,userId)=>{
+  const response=await instance.post('/users/updatepassword',{password,userId})
+  .then(res=>res.data)
+  .catch(err=>console.error(err.message))
+  return response
+}
+
+export const expireLink=async(resetId)=>{
+  const response=await instance.delete(`/users/expirereset/${resetId}`)
+  .then(res=>res.data)
+  .catch(err=>console.error(err.message))
+  return response
 }

@@ -12,7 +12,7 @@ function Header(props) {
   const navigate = useNavigate()
   const UserInfo = useSelector((state) => state.userInfo);
   useEffect(() => {
-    setUser(UserInfo);
+    setUser(UserInfo);    
   }, [UserInfo]);
   const onlogoutHandler = () => {
     dispatch(logoutuser());
@@ -20,7 +20,7 @@ function Header(props) {
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-dark">
+      <nav className="navbar navbar-expand-lg navbar-dark headeer">
         <div className="container">
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -33,23 +33,21 @@ function Header(props) {
                   Home
                 </Link>
               </li>
-              {props.headarr.map((item, pos) => {
+              {props.headarr?.length>0 && props.headarr.map((item, pos) => {
                 return (
                   <li className="nav-item" key={pos}>
                     <Link className="nav-link " to={`/${item}`}>
-                      {item[0].toUpperCase()}{item.slice(1)}
+                      {item[0]?.toUpperCase()}{item?.slice(1)}
                     </Link>
                   </li>
                 );
               })}
             </ul>
             <form className="d-flex">
-
-
               <div
                 className="modal fade"
                 id="exampleModal"
-                tabIndex="-1"
+                tabIndex="1"
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
               >
@@ -91,7 +89,7 @@ function Header(props) {
           </div>
 
           <div className="profile" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-            <img src={User.pic} className="img-fluid" alt="profile" />
+            <img src={User?.pic} className="img-fluid" alt="profile" />
           </div>
 
           <div className="offcanvas bg-dark offcanvas-end" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -101,7 +99,7 @@ function Header(props) {
                   <img src={'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'} className="img-fluid" alt="profile" />
                 </div>
               </h5>
-              <h5 className="mx-0">{User?.fname[0]?.toUpperCase()}{User?.fname?.slice(1)} {User?.lname[0]?.toUpperCase()}{User?.lname?.slice(1)}</h5>
+              <h5 className="mx-0">{Object.keys(User).length>0 && User?.fname[0]?.toUpperCase()}{Object.keys(User).length>0 && User?.fname?.slice(1)} {Object.keys(User).length>0 && User?.lname[0]?.toUpperCase()}{Object.keys(User).length>0 && User?.lname?.slice(1)}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <hr className="textwhite" />
@@ -120,11 +118,11 @@ function Header(props) {
                     </Link>
 
                   </li>
-                  {props.headarr.map((item, pos) => {
+                  {props.headarr?.length>0 && props.headarr.map((item, pos) => {
                     return (
                       <li className="nav-item" key={pos}>
                         <Link className="nav-link textwhite" data-bs-dismiss="offcanvas" to={`/${item}`}>
-                          {item[0].toUpperCase()}{item.slice(1)}
+                          {item[0]?.toUpperCase()}{item?.slice(1)}
                         </Link>
                       </li>
                     );
@@ -146,7 +144,11 @@ function Header(props) {
       </nav>
       <div>
       </div>
+      <div className='mb-4'>
+    hello
+   </div>
       <Outlet />
+      
       <Footer />
     </>
   );

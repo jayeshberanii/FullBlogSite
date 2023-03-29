@@ -23,11 +23,11 @@ function Home(props) {
     },[userData])
   return (
     <>
+     
     {
-        <Header headarr={headlist}/>        
+        <Header  headarr={headlist}/>        
     }
-   <div>
-   </div>
+  
     </>   
   )
 }

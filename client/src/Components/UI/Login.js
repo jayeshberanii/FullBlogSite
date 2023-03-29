@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { loginUser } from "../../API/api";
 import { setUserInfo } from "../../Redux/Slices/userInfoSlice";
 
@@ -8,15 +8,12 @@ function Login() {
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
     const[isvalid,setisValid]=useState(false)
-    const dispatch=useDispatch()
-    const navigation = useNavigate();
-    console.log(isvalid);
+    const dispatch=useDispatch()    
     
-    useEffect(()=>{
-        if(isvalid){
-            navigation('/')
-        }
-    },[isvalid,navigation])
+    const data=useSelector(state=>state.userInfo)
+    useEffect(()=>{           
+            data._id && setisValid(true)           
+    },[data])
 
 
     const onLoginFormSubmitHandler=async(e)=>{
@@ -24,11 +21,13 @@ function Login() {
         const obj={email:Email,password:Password}
         const user=await loginUser(obj)
         if(user){
-            setisValid(true)
+            await dispatch(setUserInfo(user))            
         }
-        dispatch(setUserInfo(user))
+        
     }
     return (
+        <>
+       {!isvalid?
         <div className="card login-form border rounded d-flex align-items-center justify-content-center">
             <div>
                 <form className="p-3 bg-light" onSubmit={(e)=>onLoginFormSubmitHandler(e)}>
@@ -47,6 +46,9 @@ function Login() {
                 </form>
             </div>
         </div>
+       :<Navigate to='/' />
+    }
+       </>
     );
 }
 

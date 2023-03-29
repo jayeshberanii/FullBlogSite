@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { editusertoserver, getUserDetails } from '../../API/api'
+import { editusertoserver, getUserDetails, resetPassword } from '../../API/api'
 import { setUserInfo } from '../../Redux/Slices/userInfoSlice'
 
 function Profile() {
@@ -39,6 +39,12 @@ function Profile() {
             await getUserDetails().then(res => dispatch(setUserInfo(res)))
 
         }
+    }
+    const sentMailHandler=async()=>{
+        await resetPassword(user).then(res=>{
+            console.log(res);
+        })
+        .catch(err=>console.log(err))
     }
     return (
         <div className='d-flex uProfile justify-content-center mb-5 pb-5'>
@@ -79,7 +85,7 @@ function Profile() {
                 ...
             </div>                       
 
-            <div className="modal fade" id="sentmail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade" id="sentmail" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content bg-dark">
                         
@@ -89,7 +95,7 @@ function Profile() {
                                 <p className='text-secondary'>We'll send you a link to your registered email address {user.email}</p>
                             </form>
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                            <button type="button" className="btn btn-primary ms-2">Send</button>
+                            <button type="button" className="btn btn-primary ms-2" data-bs-dismiss="modal" onClick={()=>sentMailHandler()}>Send</button>
                         </div>
                     </div>
                 </div>

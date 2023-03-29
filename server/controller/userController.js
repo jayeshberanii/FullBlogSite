@@ -1,11 +1,14 @@
 const Bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
+const ResetToken = require("../models/resettoken");
+const mongoose=require('mongoose');
+
 
 //register
 const registerUser = async (req, res) => {
   try {
-    const { fname, lname, email, password,userType } = req.body;
+    const { fname, lname, email, password, userType } = req.body;
     const salt = await Bcrypt.genSalt(10);
     const hassedPassword = await Bcrypt.hash(password || `${fname}123`, salt);
     let user = await User.findOne({ email: email });
@@ -53,7 +56,7 @@ const loginUser = async (req, res) => {
         });
         res.cookie("token", token, { httpOnly: true, expiresIn: 36000 });
         const { password: pass, ...rest } = user._doc;
-        res.status(200).json({ msg: "login seccessfully", user: rest ,token:token});
+        res.status(200).json({ msg: "login seccessfully", user: rest, token: token });
       } else {
         res.status(404).json({ msg: "invalid credentials!" });
       }
@@ -82,9 +85,9 @@ const getMe = async (req, res) => {
 };
 
 //get all users
-const getUsers=async(req, res) => {
+const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find({_id:{$ne:req.user}});
     // const { password: pass, ...rest } = user._doc;
     res.status(200).json(users);
   } catch (error) {
@@ -95,14 +98,14 @@ const getUsers=async(req, res) => {
 
 //updateUserDetails
 const updateUserDetails = async (req, res) => {
-  const { _id,fname,lname, email, userType } = req.body.data;
+  const { _id, fname, lname, email, userType } = req.body.data;
   try {
     const user = await User.findById(_id);
     if (!user) {
       res.status(404).json({ msg: "user not Found" });
     } else {
       const exists = await User.findOne({ email: email });
-      if (exists && exists._id.toString() !== user._id.toString() ) {
+      if (exists && exists._id.toString() !== user._id.toString()) {
         res.status(404).json({ msg: "Email already Exists" });
       } else {
         user.fname = fname || user.fname;
@@ -121,24 +124,24 @@ const updateUserDetails = async (req, res) => {
 
 //updateUserPassword
 const updateUserPassword = async (req, res) => {
-  const { password } = req.body;
+  const { password,userId } = req.body;
   try {
-    const user = await User.findById(req.user);
+    const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ msg: "User not Found!" });
+      res.status(404).json({ msg: "User not Found!",isupdated:false });
     } else {
       if (!password) {
-        res.status(200).json({ msg: "password field is empty" });
+        res.status(200).json({ msg: "password field is empty",isupdated:false });
       } else {
         const isMatch = await Bcrypt.compare(password, user.password);
         if (isMatch) {
-          res.status(404).json({ msg: "You have entered current password!" });
+          res.status(200).json({ msg: "You have entered current password!",isupdated:false });
         } else {
           const salt = await Bcrypt.genSalt(10);
           const hashpass = await Bcrypt.hash(password, salt);
           user.password = hashpass || user.password;
           await user.save();
-          res.status(200).json({ msg: "password updated" });
+          res.status(200).json({ msg: "password updated",isupdated:true });
         }
       }
     }
@@ -155,14 +158,67 @@ const deleterUser = async (req, res) => {
     // if (!user) {
     //   res.status(404).json({ msg: "user not Found" });
     // } else {
-      await User.deleteOne({_id:req.params.id});
-      res.status(200).json({ msg: "user deleted" });
+    await User.deleteOne({ _id: req.params.id });
+    res.status(200).json({ msg: "user deleted" });
     // }
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ msg: error.message });
   }
 };
+
+//reset password
+const resetPass = async (req, res) => {
+  try {
+    let expirein = new Date()
+
+    expirein.setSeconds(
+      expirein.getSeconds() + 3600
+    )
+    const token = jwt.sign({ user: req.user }, process.env.SECRET_KEY)
+    const NewResetToken = await new ResetToken({
+      token: token,
+      user: req.user,
+      expiryDate: expirein.getTime()
+    })
+    await NewResetToken.save()
+    res.status(200).json({ tokenId: NewResetToken._id, msg: 'reset-pass token generated' })
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: error.message });
+  }
+}
+const checkExpiry = async (req, res) => {
+  const resetId  = req.params.id  
+  try {
+    const resetToken = await ResetToken.findOne({ _id: resetId })    
+    if (!resetToken) {
+      res.status(404).json({ msg: "reset token not found",isValid:false })
+    } else {
+      if (resetToken.expiryDate.getTime() < new Date().getTime()){        
+        res.status(200).json({ msg: "reset token expired!!",isValid:false })
+      }else{        
+        res.status(200).json({ msg: "continue reset password....",isValid:true,userId:resetToken.user})
+      }
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: error.message });
+  }
+}
+
+//expire reset link
+const expireReset=async(req,res)=>{
+  try {
+    const resetId=req.params.id
+    await ResetToken.deleteOne({_id:resetId})
+    .then(result=>res.status(200).json({msg:"link expired successfully...."}))
+    .catch(err=>res.status(404).json({msg:err.message}))
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: error.message });
+  }
+}
 
 module.exports = {
   registerUser,
@@ -172,5 +228,8 @@ module.exports = {
   updateUserDetails,
   updateUserPassword,
   deleterUser,
-  getUsers
+  getUsers,
+  resetPass,
+  checkExpiry,
+  expireReset
 };

@@ -19,7 +19,7 @@
   background:#363538;
 }
 .homelabel{
-  height: 75vh;
+  height: 100vh;
 }
 .blogsitetitle{
   font-size: 120px;
@@ -28,10 +28,10 @@
   justifyContent: center
 }
 .footer{
-  background:#363538;
+  background:#363538b7;
   position: fixed;
   width: 100%;
-  top: 88%;  
+  top: 91%;  
   box-shadow: 10px 10px 10px 25px #49484854;
 }
 .bloglist{
@@ -93,8 +93,20 @@
   height: 50vh;
   width: 100%;
 }
+.uProfile1{
+  height: 100vh;
+  width: 100%;
+}
 .profile-img{
   height: 12rem;
   width: 12rem;
   border-radius: 50%;
+}
+.headeer{
+  position:fixed;
+  width: 100%;
+  z-index: 1;
+}
+#exampleModal{
+  z-index: -1;
 }

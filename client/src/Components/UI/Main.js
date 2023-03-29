@@ -2,7 +2,7 @@ import React from 'react'
 
 function Main() {
   return (
-    <div className='d-flex align-items-center justify-content-center homelabel'>
+    <div className='d-flex align-items-center justify-content-center homelabel p-5'>
         <div>
             
             <h2 className='blogsitelabel'>WELCOME TO</h2>

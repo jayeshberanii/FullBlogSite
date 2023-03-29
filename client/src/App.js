@@ -6,6 +6,7 @@ import AdminProtected from './Auth/AdminProtected';
 import ProtectedRoute from './Auth/ProtectedRoute';
 import UserProtected from './Auth/UserProtected';
 import BlogTable from './Components/Layout/BlogTable';
+import ResetPass from './Components/Layout/ResetPass';
 import UserTable from './Components/Layout/UserTable';
 import BlogList from './Components/UI/BlogList';
 import Home from './Components/UI/Home';
@@ -65,6 +66,7 @@ function App() {
             </ProtectedRoute>} />
 
         </Route>
+        <Route path='reset/:id' element={<ResetPass/>} />
       </Routes>
     </BrowserRouter>
   );
