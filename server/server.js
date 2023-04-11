@@ -5,34 +5,34 @@ dotenv.config()
 const coockie=require('cookie-parser')
 const Passport=require('./Auth/Passport')
 const cors=require('cors')
-const session=require('express-session')
+// const session=require('express-session')
 
 require('./DBconn/conn')
-app.use(session({
-    secret:process.env.SECRET_KEY,
-    resave:true,
-    saveUninitialized:true,
-    cookie:{
-        secure:false,
-        maxAge:300000
-    }
-}))
+// app.use(session({
+//     secret:process.env.SECRET_KEY,
+//     resave:true,
+//     saveUninitialized:true,
+//     cookie:{
+//         secure:false,
+//         maxAge:300000
+//     }
+// }))
 app.use(express.json())
 app.use(cors())
 app.use(coockie())
 app.use(express.urlencoded({extended:true}))
 
-app.use(Passport.initialize());
-app.use(Passport.session());
+// app.use(Passport.initialize());
+// app.use(Passport.session());
 
-app.get('/auth/google', Passport.authenticate('google', { scope: ['profile', 'email'] }));
+// app.get('/auth/google', Passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/callback',
-    Passport.authenticate('google', { 
-        failureRedirect: '/login' ,
-        successRedirect:'/'
-    })
-);
+// app.get('/auth/google/callback',
+//     Passport.authenticate('google', { 
+//         failureRedirect: '/login' ,
+//         successRedirect:'/'
+//     })
+// );
 app.get('/', (req, res) => {
     res.send('home')
 })
