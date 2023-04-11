@@ -6,7 +6,7 @@ const resettokenSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
     },
-    expiryDate: Date,
+expiryDate: Date,
 });
 
 const ResetToken=new mongoose.model('ResetToken',resettokenSchema)

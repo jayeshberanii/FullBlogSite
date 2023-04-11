@@ -47,18 +47,23 @@ const loginUser = async (req, res) => {
 
   try {
     if (!user) {
-      res.status(404).json({ msg: "user not Found" });
+      res.status(404).json({ msg: "user not Found🎃" });
     } else {
       const isValid = await Bcrypt.compare(password, user.password);
       if (isValid) {
-        const token = jwt.sign({ user: user._id }, process.env.SECRET_KEY, {
-          expiresIn: 36000,
+        const accessToken = jwt.sign({ user: user._id }, process.env.ACCESS_TOKEN, {
+          expiresIn: "1h",
         });
-        res.cookie("token", token, { httpOnly: true, expiresIn: 36000 });
+        const refreshToken = jwt.sign({ user: user._id }, process.env.REFRESH_TOKEN, {
+          expiresIn: "1h",
+        });
+        user.refreshToken=refreshToken
+        await user.save()
+        res.cookie("token", accessToken, { httpOnly: true, expiresIn: 36000 });
         const { password: pass, ...rest } = user._doc;
-        res.status(200).json({ msg: "login seccessfully", user: rest, token: token });
+        res.status(200).json({ msg: "login successfully🎉", user: rest, token: accessToken });
       } else {
-        res.status(404).json({ msg: "invalid credentials!" });
+        res.status(404).json({ msg: "invalid credentials🎃!" });
       }
     }
   } catch (error) {
@@ -68,8 +73,16 @@ const loginUser = async (req, res) => {
 };
 
 //logout
-const logoutUser = (req, res) => {
-  res.clearCookie("token").status(200).json({ msg: "logout successfully" });
+const logoutUser = async(req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.user,{
+      refreshToken:""
+    })
+    res.clearCookie("token").status(200).json({ msg: "logout successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ msg: error.message });
+  }  
 };
 
 //getme

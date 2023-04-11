@@ -25,6 +25,9 @@ pic:{
 userType:{
     type:String,
     default:"user"
+},
+refreshToken:{
+    type:String
 }
 },{timestamps:true})
 

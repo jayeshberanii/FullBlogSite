@@ -1,11 +1,14 @@
 const Passport = require('passport')
 const Strategy = require('passport-google-oauth20').Strategy
 const User = require('../models/userModel')
+const cors=require('cors')
+Passport.use(cors())
 
 Passport.use(new Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
+    callbackURL: '/auth/google/callback',
+    origin: "http://localhost:3000" 
 }, async (accessToken, refreshToken, profile, done) => {
     const exists = await User.findOne({ email: profile.emails[0].value })
     if (exists) {

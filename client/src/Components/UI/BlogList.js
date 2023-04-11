@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import { getAllBlogs } from "../../API/api";
 
 function BlogList(props) {
-  const [rowData, setrowData] = useState([]);  
+  const [rowData, setRowData] = useState([]);  
   useEffect(() => {
-    getAllBlogs().then((res) =>setrowData(res.data))
+    getAllBlogs().then((res) =>setRowData(res.data))
   }, []);
   return (
     <>
       {
         rowData ? rowData.map((item, pos) => {
           return (
-            <div key={pos} className='d-flex align-items-center bloglist'>
+            <div key={pos} className='d-flex align-items-center blog-list'>
             <div className='card w-100 d-flex justify-content-center  py-4 mx-5 my-4 shadow'>
                 <div>
                     <div className=''>
-                        <h4 className='card-title textblue ms-2'>{item.title}</h4>
+                        <h4 className='card-title textBlue ms-2'>{item.title}</h4>
                         <figcaption className="blockquote-footer mt-1 ms-3 mb-0">
                             <i>{item.category}</i>
                         </figcaption>

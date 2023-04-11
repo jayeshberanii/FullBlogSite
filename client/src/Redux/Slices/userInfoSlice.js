@@ -7,11 +7,11 @@ const useInfoSlice=createSlice({
         setUserInfo(state,action){
             return action.payload
         },
-        logoutuser(state,action){
+        logoutUser(state,action){
             return {}
         }
     }
 })
 
 export default useInfoSlice.reducer
-export const {setUserInfo,logoutuser}=useInfoSlice.actions
+export const {setUserInfo,logoutUser}=useInfoSlice.actions

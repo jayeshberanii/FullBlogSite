@@ -1,20 +1,23 @@
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { addblogtoserver, deleteblogfromserver, editblogtoserver, getPersonalBlogs } from "../../API/api";
-
+import {
+  addBlogToServer,
+  deleteBlogFromServer,
+  editBlogToServer,
+  getPersonalBlogs,
+} from "../../API/api";
 
 function PersonalBlog() {
-
   const [Category, setCategory] = useState("");
 
-  const [Disabledbtn, setDisabledbtn] = useState(true);
-  const [Title, settitle] = useState("");
-  const [Description, setdescription] = useState("");
-  const [deleteId, setdeleteID] = useState('')
-  const [Counter, setCounter] = useState(0)
-  const [editData, seteditData] = useState({})
-  const [editCounter, setEditCounter] = useState('')
+  const [disabledBtn, setDisabledBtn] = useState(true);
+  const [Title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
+  const [deleteId, setDeleteID] = useState("");
+  const [Counter, setCounter] = useState(0);
+  const [editData, setEditData] = useState({});
+  const [editCounter, setEditCounter] = useState("");
 
   const optionlist = [
     "Food blogs",
@@ -26,15 +29,15 @@ function PersonalBlog() {
     "Photography blogs",
   ];
 
-  const [rowData, setrowData] = useState([]);
+  const [rowData, setRowData] = useState([]);
   useEffect(() => {
     getPersonalBlogs().then((res) => {
       if (res?.data !== undefined) {
-        setrowData(res.data)
+        setRowData(res.data);
       } else {
-        setrowData([])
+        setRowData([]);
       }
-    })
+    });
   }, [Counter]);
 
   useEffect(() => {
@@ -44,57 +47,57 @@ function PersonalBlog() {
       Category !== "" &&
       Description !== ""
     ) {
-      setDisabledbtn(false);
+      setDisabledBtn(false);
     } else {
-      setDisabledbtn(true);
+      setDisabledBtn(true);
     }
   }, [Category, Title, Description]);
   useEffect(() => {
-    let blogLabel = document.getElementById('blog-label')
-    let blogCategory = document.getElementById('blog-category')
+    let blogLabel = document.getElementById("blog-label");
+    let blogCategory = document.getElementById("blog-category");
     // let blogTitle=document.getElementById('blog-title')
     // let blogDescription=document.getElementById('blog-description')
-    let blogBtn = document.getElementById('blog-btn')
+    let blogBtn = document.getElementById("blog-btn");
 
-    blogLabel.innerHTML = "Edit Blog Details"
-    blogBtn.innerHTML = "Edit"
-    blogCategory.value = editData.category
+    blogLabel.innerHTML = "Edit Blog Details";
+    blogBtn.innerHTML = "Edit";
+    blogCategory.value = editData.category;
     // blogTitle.value=editData.title
     // blogDescription.value=editData.description
     setCategory(editData.category);
-    settitle(editData.title);
-    setdescription(editData.description);
-    setEditCounter('')
-  }, [editCounter,editData])  
+    setTitle(editData.title);
+    setDescription(editData.description);
+    setEditCounter("");
+  }, [editCounter, editData]);
 
   const onEdit = (params) => {
-    setEditCounter(params.data._id)
-    seteditData(params.data)
+    setEditCounter(params.data._id);
+    setEditData(params.data);
   };
 
   const onDelete = (params) => {
-    setdeleteID(params.data._id)
-  }
+    setDeleteID(params.data._id);
+  };
 
-  const onDeleteitem = async () => {
-    await deleteblogfromserver(deleteId).then(res => {
+  const onDeleteItem = async () => {
+    await deleteBlogFromServer(deleteId).then((res) => {
       setTimeout(() => {
-        setCounter(Counter + 1)
+        setCounter(Counter + 1);
       }, 100);
     });
 
     //  await getAllBlogs().then((res) => {
     //     if (res?.data !== undefined) {
-    //       setrowData(res.data)
+    //       setRowData(res.data)
     //     } else {
-    //       setrowData([])
+    //       setRowData([])
     //     }
     //   })
   };
   const [columnDefs] = useState([
-    { headerName: "CreatedBy", field: 'user.fname' },
-    { field: "title", },
-    { field: "category", },
+    { headerName: "CreatedBy", field: "user.fname" },
+    { field: "title" },
+    { field: "category" },
     { field: "description", minWidth: 400 },
 
     {
@@ -115,7 +118,7 @@ function PersonalBlog() {
 
           <button
             data-bs-toggle="modal"
-            data-bs-target="#deleteblogModal"
+            data-bs-target="#deleteBlogModal"
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onDelete(params)}
           >
@@ -125,54 +128,65 @@ function PersonalBlog() {
       ),
     },
   ]);
-  const defaultColDef = useMemo(() => ({
-    sortable: true,
-    filter: true,
-    editable: true,
-    flex: 1,
-    minWidth: 150,
-  }), []);
+  const defaultColDef = useMemo(
+    () => ({
+      sortable: true,
+      filter: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+    }),
+    []
+  );
   const onAddBlog = () => {
-    let blogLabel = document.getElementById('blog-label')
-    let blogCategory = document.getElementById('blog-category')
+    let blogLabel = document.getElementById("blog-label");
+    let blogCategory = document.getElementById("blog-category");
     // let blogTitle=document.getElementById('blog-title')
     // let blogDescription=document.getElementById('blog-description')
-    let blogBtn = document.getElementById('blog-btn')
-    blogLabel.innerHTML = "Add Blog Details"
-    blogBtn.innerHTML = "Add"
-    blogCategory.value = ''
+    let blogBtn = document.getElementById("blog-btn");
+    blogLabel.innerHTML = "Add Blog Details";
+    blogBtn.innerHTML = "Add";
+    blogCategory.value = "";
     // blogTitle.value=''
     // blogDescription.value=''
-    setCategory('');
-    settitle('');
-    setdescription('');
-  }
-  const onaddblogformSubmitHandler = async (e) => {
+    setCategory("");
+    setTitle("");
+    setDescription("");
+  };
+  const onAddBlogFormSubmitHandler = async (e) => {
     e.preventDefault();
     e.preventDefault();
-    let blogBtn = document.getElementById('blog-btn')
+    let blogBtn = document.getElementById("blog-btn");
     if (blogBtn.textContent === "Add") {
-      const obj = { category: Category, title: Title, description: Description };
-      await addblogtoserver(obj).then(res => {
+      const obj = {
+        category: Category,
+        title: Title,
+        description: Description,
+      };
+      await addBlogToServer(obj).then((res) => {
         setTimeout(() => {
-          setCounter(Counter + 1)
+          setCounter(Counter + 1);
         }, 100);
-      })
+      });
     } else if (blogBtn.textContent === "Edit") {
-      const obj = { category: Category, title: Title, description: Description, blogId: editData._id };
-      await editblogtoserver(obj).then(res => {
+      const obj = {
+        category: Category,
+        title: Title,
+        description: Description,
+        blogId: editData._id,
+      };
+      await editBlogToServer(obj).then((res) => {
         setTimeout(() => {
-          setCounter(Counter + 1)
+          setCounter(Counter + 1);
         }, 100);
-      })
+      });
     }
     setCategory(" ");
-    settitle(" ");
-    setdescription(" ");
+    setTitle(" ");
+    setDescription(" ");
   };
   return (
     <>
-
       <div className="center-align p-5">
         <div
           className="ag-theme-alpine "
@@ -192,11 +206,10 @@ function PersonalBlog() {
             className="modal fade"
             id="AddBlogModal"
             tabIndex="-1"
-            aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
             <div className="modal-dialog">
-              <form onSubmit={(e) => onaddblogformSubmitHandler(e)}>
+              <form onSubmit={(e) => onAddBlogFormSubmitHandler(e)}>
                 <div className="modal-content">
                   <div className="modal-header">
                     <h5 className="modal-title" id="blog-label">
@@ -211,14 +224,17 @@ function PersonalBlog() {
                   </div>
                   <div className="modal-body">
                     <div className="mb-3">
-                      <label htmlFor="recipient-name" className="col-form-label">
+                      <label
+                        htmlFor="recipient-name"
+                        className="col-form-label"
+                      >
                         Select Category
                       </label>
                       <select
                         className="form-select"
                         aria-label="Default select example"
                         onChange={(e) => setCategory(e.target.value)}
-                        id='blog-category'
+                        id="blog-category"
                         required
                       >
                         <option>Select Blog Category</option>
@@ -230,16 +246,18 @@ function PersonalBlog() {
                           );
                         })}
                       </select>
-                      <label htmlFor="recipient-name" className="col-form-label">
+                      <label
+                        htmlFor="recipient-name"
+                        className="col-form-label"
+                      >
                         Title
                       </label>
                       <input
                         type="text"
                         className="form-control"
                         id="blog-title"
-
-                        onChange={(e) => settitle(e.target.value)}
-                        value={Title || ''}
+                        onChange={(e) => setTitle(e.target.value)}
+                        value={Title || ""}
                         required
                       />
                     </div>
@@ -250,8 +268,7 @@ function PersonalBlog() {
                       <textarea
                         className="form-control"
                         id="blog-description"
-
-                        onChange={(e) => setdescription(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                         value={Description}
                         required
                       ></textarea>
@@ -266,7 +283,7 @@ function PersonalBlog() {
                       Close
                     </button>
                     <button
-                      disabled={Disabledbtn}
+                      disabled={disabledBtn}
                       type="submit"
                       data-bs-dismiss="modal"
                       className="btn bg-teal"
@@ -282,9 +299,8 @@ function PersonalBlog() {
 
           <div
             className="modal fade"
-            id="deleteblogModal"
+            id="deleteBlogModal"
             tabIndex="-1"
-            aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
             <div className="modal-dialog">
@@ -300,7 +316,9 @@ function PersonalBlog() {
                     aria-label="Close"
                   ></button>
                 </div>
-                <div className="modal-body">Are you sure you want to delete blog?</div>
+                <div className="modal-body">
+                  Are you sure you want to delete blog?
+                </div>
                 <div className="modal-footer">
                   <button
                     type="button"
@@ -313,7 +331,7 @@ function PersonalBlog() {
                     type="button"
                     data-bs-dismiss="modal"
                     className="btn btn-danger"
-                    onClick={() => onDeleteitem()}
+                    onClick={() => onDeleteItem()}
                   >
                     Delete
                   </button>

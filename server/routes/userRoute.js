@@ -4,7 +4,7 @@ const route = require('express').Router()
 
 route.post('/register', registerUser)
 route.post('/login', loginUser)
-route.get('/logout', Authorize, logoutUser)
+route.post('/logout', Authorize, logoutUser)
 route.post('/get', Authorize, getMe)
 route.post('/', Authorize, getUsers)
 route.post('/updateuserdetails', Authorize, updateUserDetails)

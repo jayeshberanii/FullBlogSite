@@ -1,22 +1,22 @@
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
-import { addblogtoserver, deleteblogfromserver, editblogtoserver, getAllBlogs } from "../../API/api";
+import { addBlogToServer, deleteBlogFromServer, editBlogToServer, getAllBlogs } from "../../API/api";
 
 
 function BlogTable() {
 
   const [Category, setCategory] = useState("");
 
-  const [Disabledbtn, setDisabledbtn] = useState(true);
-  const [Title, settitle] = useState("");
-  const [Description, setdescription] = useState("");
-  const [deleteId, setdeleteID] = useState('')
+  const [DisabledBtn, setDisabledBtn] = useState(true);
+  const [Title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
+  const [deleteId, setDeleteID] = useState('')
   const [Counter, setCounter] = useState(0)
-  const [editData, seteditData] = useState({})
+  const [editData, setEditData] = useState({})
   const [editCounter, setEditCounter] = useState('')
 
-  const optionlist = [
+  const optionList = [
     "Food blogs",
     "Personal blogs",
     "Travel blogs",
@@ -26,13 +26,13 @@ function BlogTable() {
     "Photography blogs",
   ];
 
-  const [rowData, setrowData] = useState([]);
+  const [rowData, setRowData] = useState([]);
   useEffect(() => {
     getAllBlogs().then((res) => {
       if (res?.data !== undefined) {
-        setrowData(res.data)
+        setRowData(res.data)
       } else {
-        setrowData([])
+        setRowData([])
       }
     })
   }, [Counter]);
@@ -44,9 +44,9 @@ function BlogTable() {
       Category !== "" &&
       Description !== ""
     ) {
-      setDisabledbtn(false);
+      setDisabledBtn(false);
     } else {
-      setDisabledbtn(true);
+      setDisabledBtn(true);
     }
   }, [Category, Title, Description]);
   useEffect(() => {
@@ -62,22 +62,22 @@ function BlogTable() {
     // blogTitle.value=editData.title
     // blogDescription.value=editData.description
     setCategory(editData.category);
-    settitle(editData.title);
-    setdescription(editData.description);
+    setTitle(editData.title);
+    setDescription(editData.description);
     setEditCounter('')
-  }, [editCounter,editData])  
+  }, [editCounter, editData])
 
   const onEdit = (params) => {
     setEditCounter(params.data._id)
-    seteditData(params.data)
+    setEditData(params.data)
   };
 
   const onDelete = (params) => {
-    setdeleteID(params.data._id)
+    setDeleteID(params.data._id)
   }
 
-  const onDeleteitem = async () => {
-    await deleteblogfromserver(deleteId).then(res => {
+  const onDeleteItem = async () => {
+    await deleteBlogFromServer(deleteId).then(res => {
       setTimeout(() => {
         setCounter(Counter + 1)
       }, 100);
@@ -85,9 +85,9 @@ function BlogTable() {
 
     //  await getAllBlogs().then((res) => {
     //     if (res?.data !== undefined) {
-    //       setrowData(res.data)
+    //       setRowData(res.data)
     //     } else {
-    //       setrowData([])
+    //       setRowData([])
     //     }
     //   })
   };
@@ -115,7 +115,7 @@ function BlogTable() {
 
           <button
             data-bs-toggle="modal"
-            data-bs-target="#deleteblogModal"
+            data-bs-target="#deleteBlogModal"
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onDelete(params)}
           >
@@ -129,6 +129,7 @@ function BlogTable() {
     sortable: true,
     filter: true,
     editable: true,
+    resizable:true,
     flex: 1,
     minWidth: 150,
   }), []);
@@ -144,31 +145,31 @@ function BlogTable() {
     // blogTitle.value=''
     // blogDescription.value=''
     setCategory('');
-    settitle('');
-    setdescription('');
+    setTitle('');
+    setDescription('');
   }
-  const onaddblogformSubmitHandler = async (e) => {
+  const onAddBlogFormSubmitHandler = async (e) => {
     e.preventDefault();
     e.preventDefault();
     let blogBtn = document.getElementById('blog-btn')
     if (blogBtn.textContent === "Add") {
       const obj = { category: Category, title: Title, description: Description };
-      await addblogtoserver(obj).then(res => {
+      await addBlogToServer(obj).then(res => {
         setTimeout(() => {
           setCounter(Counter + 1)
         }, 100);
       })
     } else if (blogBtn.textContent === "Edit") {
       const obj = { category: Category, title: Title, description: Description, blogId: editData._id };
-      await editblogtoserver(obj).then(res => {
+      await editBlogToServer(obj).then(res => {
         setTimeout(() => {
           setCounter(Counter + 1)
         }, 100);
       })
     }
     setCategory(" ");
-    settitle(" ");
-    setdescription(" ");
+    setTitle(" ");
+    setDescription(" ");
   };
   return (
     <>
@@ -192,11 +193,10 @@ function BlogTable() {
             className="modal fade"
             id="AddBlogModal"
             tabIndex="-1"
-            aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
             <div className="modal-dialog">
-              <form onSubmit={(e) => onaddblogformSubmitHandler(e)}>
+              <form onSubmit={(e) => onAddBlogFormSubmitHandler(e)}>
                 <div className="modal-content">
                   <div className="modal-header">
                     <h5 className="modal-title" id="blog-label">
@@ -222,7 +222,7 @@ function BlogTable() {
                         required
                       >
                         <option>Select Blog Category</option>
-                        {optionlist.map((item, pos) => {
+                        {optionList.map((item, pos) => {
                           return (
                             <option key={pos} value={item}>
                               {item}
@@ -238,7 +238,7 @@ function BlogTable() {
                         className="form-control"
                         id="blog-title"
 
-                        onChange={(e) => settitle(e.target.value)}
+                        onChange={(e) => setTitle(e.target.value)}
                         value={Title || ''}
                         required
                       />
@@ -251,7 +251,7 @@ function BlogTable() {
                         className="form-control"
                         id="blog-description"
 
-                        onChange={(e) => setdescription(e.target.value)}
+                        onChange={(e) => setDescription(e.target.value)}
                         value={Description}
                         required
                       ></textarea>
@@ -266,7 +266,7 @@ function BlogTable() {
                       Close
                     </button>
                     <button
-                      disabled={Disabledbtn}
+                      disabled={DisabledBtn}
                       type="submit"
                       data-bs-dismiss="modal"
                       className="btn bg-teal"
@@ -282,9 +282,8 @@ function BlogTable() {
 
           <div
             className="modal fade"
-            id="deleteblogModal"
+            id="deleteBlogModal"
             tabIndex="-1"
-            aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
             <div className="modal-dialog">
@@ -313,7 +312,7 @@ function BlogTable() {
                     type="button"
                     data-bs-dismiss="modal"
                     className="btn btn-danger"
-                    onClick={() => onDeleteitem()}
+                    onClick={() => onDeleteItem()}
                   >
                     Delete
                   </button>

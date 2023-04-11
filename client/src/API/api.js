@@ -2,7 +2,7 @@ import axios from "axios";
 import emailjs from '@emailjs/browser'
 
 const instance = axios.create({
-  baseURL: "http://192.168.2.53:4000/api"
+  baseURL: "https://blogsite-hp2g.onrender.com/api"
 });
 
 export const registerUser = async (obj) => {
@@ -30,6 +30,14 @@ export const loginUser = async (obj) => {
   }
 };
 
+export const logoutUserServer = async () => {
+  const token = localStorage.getItem("token");
+  const response = await instance.post(`/users/logout`, {
+    token: token,
+  });
+  console.log("logout successfully");
+}
+
 export const getAllUsers = async () => {
   const token = localStorage.getItem("token");
   const response = await instance.post(`/users/`, {
@@ -56,7 +64,7 @@ export const getAllBlogs = async () => {
 };
 
 //create blog
-export const addblogtoserver = async (obj) => {
+export const addBlogToServer = async (obj) => {
   const token = localStorage.getItem("token");
   await instance
     .post(`/todos/create`, { data: obj, token: token })
@@ -65,7 +73,7 @@ export const addblogtoserver = async (obj) => {
 };
 
 //delete user
-export const deleteuserfromserver = async (id) => {
+export const deleteUserFromServer = async (id) => {
   instance
     .delete(`/users/${id}`)
     .then((res) => console.log("delete user successfully"))
@@ -73,7 +81,7 @@ export const deleteuserfromserver = async (id) => {
 };
 
 //delete blog
-export const deleteblogfromserver = async (id) => {
+export const deleteBlogFromServer = async (id) => {
   //   const token = localStorage.getItem("token");
   const response = instance
     .delete(`/todos/${id}`)
@@ -108,7 +116,7 @@ export const getPersonalBlogs = async () => {
 };
 
 //edit blog
-export const editblogtoserver = async (obj) => {
+export const editBlogToServer = async (obj) => {
   const token = localStorage.getItem("token");
   await instance
     .put(`/todos/${obj.blogId}`, { data: obj, token: token })
@@ -117,7 +125,7 @@ export const editblogtoserver = async (obj) => {
 }
 
 //edit user
-export const editusertoserver = async (obj) => {
+export const editUserToServer = async (obj) => {
   const token = localStorage.getItem("token");
   await instance
     .post(`/users/updateuserdetails`, { data: obj, token: token })
@@ -174,9 +182,23 @@ export const changePassword=async (password,userId)=>{
   return response
 }
 
+//check expire link
 export const expireLink=async(resetId)=>{
   const response=await instance.delete(`/users/expirereset/${resetId}`)
   .then(res=>res.data)
   .catch(err=>console.error(err.message))
   return response
+}
+
+//sign in with google
+export const signInWithGoogle=async()=>{
+  try {
+   const response=await axios.get('http://localhost:4000/auth/google',{
+    withCredentials: true
+   })
+   return response
+  } catch (error) {
+    console.log(error.message);
+    return error.message
+  }
 }

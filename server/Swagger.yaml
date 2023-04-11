@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+  title: Aspire APIs
+  description: Used For Practice
+  version: 1.0.0
+  contact:
+    email: jayesh.berani@aspiresoftserv.com
+servers:
+  - url: http://localhost:4000
+    description: Internal server for testing
+paths:
+  /users:
+    get:
+      summary: Returns the list of user.
+      tags:
+        - User API
+      description: Optional extended description in CommonMark or HTML.
+      responses:
+        "200":
+          description: return response string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                      example: Object (Unique ID)
+                    firstname:
+                      type: string
+                      example: FirstName
+                    lastname:
+                      type: string
+                      example: LastName
+                    email:
+                      type: string
+                      example: Email
+                    password:
+                      type: string
+                      example: Password
+                    role:
+                      type: string
+                      example: Role
+                    token:
+                      type: array
+                      example: UniqueTokens for Login
+    post:
+      summary: Creates a user.
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                FirstName:
+                  type: string
+                LastName:
+                  type: string
+                Email:
+                  type: string
+                Password:
+                  type: string
+                Role:
+                  type: string
+          text/plain:
+            schema:
+              type: string
+      tags:
+        - User API
+      responses:
+        "201":
+          description: Created
+  /api/users/:
+    post:
+      summary: Returns list of /users
+      tags:
+        - User API
+      responses:
+        "200":
+          description: Returns response string
+          content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                    example: Object (Unique ID)
+                  firstname:
+                    type: string
+                    example: FirstName
+                  lastname:
+                    type: string
+                    example: LastName
+                  email:
+                    type: string
+                    example: Email
+                  password:
+                    type: string
+                    example: Password
+                  pic:
+                    type: string
+                    example: ProfilePicture
+                  userType:
+                    type: String
+                    example: role

@@ -4,24 +4,24 @@ import { changePassword, checkExpiry, expireLink } from '../../API/api'
 
 function ResetPass() {
     const [pass, setPass] = useState('')
-    const [cpass, setCpass] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const[isDisable,setIsDisable]=useState(true)
-    const[isVerified,setIsVarified]=useState(false)
+    const[isVerified,setIsVerified]=useState(false)
     const[userId,setUserId]=useState('')
     const params=useParams()
     const navigate=useNavigate()
 
     useEffect(()=>{
         checkExpiry(params.id).then(res=>{
-            res.isValid && setIsVarified(true) 
+            res.isValid && setIsVerified(true) 
             res.isValid && setUserId(res.userId)
         }).catch(err=>console.log(err))
     },[])
     
     useEffect(() => {
-        if (pass !== '' && cpass !== ''){
-            if (pass.length>6 && cpass.length>6){
-                if(pass===cpass){
+        if (pass !== '' && confirmPassword !== ''){
+            if (pass.length>6 && confirmPassword.length>6){
+                if(pass===confirmPassword){
                     setIsDisable(false)
                 }else{
                     setIsDisable(true)
@@ -32,7 +32,7 @@ function ResetPass() {
         }else{
             setIsDisable(true)
         }
-    }, [cpass, pass])
+    }, [confirmPassword, pass])
     const onSubmitHandler=async(e)=>{
         e.preventDefault()
         await changePassword(pass,userId).then(async res=>{
@@ -59,7 +59,7 @@ function ResetPass() {
                     </div>
                     <div className="mb-3">
                         <label className="form-label">confirm Password</label>
-                        <input type="password" className="form-control " id="confirm-password" onChange={(e)=>setCpass(e.target.value)}/>
+                        <input type="password" className="form-control " id="confirm-password" onChange={(e)=>setConfirmPassword(e.target.value)}/>
                     </div>
                     <button disabled={isDisable} type="submit" className="btn btn-primary">Submit</button>
                 </form>

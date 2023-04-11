@@ -22,6 +22,8 @@
     "mongoose": "^7.0.2",
     "nodemon": "^2.0.21",
     "passport": "^0.6.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "swagger-ui-express": "^4.6.2",
+    "yamljs": "^0.3.0"
   }
 }

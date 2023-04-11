@@ -1,22 +1,22 @@
 import { AgGridReact } from "ag-grid-react";
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  deleteuserfromserver,
-  editusertoserver,
+  deleteUserFromServer,
+  editUserToServer,
   getAllUsers,
   registerUser,
 } from "../../API/api";
 
 function UserTable(props) {
-  const [Deleteitem, setDeleteitem] = useState("");
-  const [Disabledbtn, setDisabledbtn] = useState(true);
+  const [deleteItem, setDeleteItem] = useState("");
+  const [disabledBtn, setDisabledBtn] = useState(true);
   const [Fname, setFname] = useState("");
   const [Lname, setLname] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
   const [Counter, setCounter] = useState(0);
-  const [rowData, setrowData] = useState([]);
+  const [rowData, setRowData] = useState([]);
   const [editData, setEditData] = useState({});
   const [editCounter, setEditCounter] = useState("");
   useEffect(() => {
@@ -25,18 +25,18 @@ function UserTable(props) {
       Lname !== undefined &&
       Email !== ""       
     ) {
-      setDisabledbtn(false);
+      setDisabledBtn(false);
     } else {
-      setDisabledbtn(true);
+      setDisabledBtn(true);
     }
   }, [Fname, Lname, Email]);
 
   useEffect(() => {
     getAllUsers().then((res) => {
       if (res?.data !== undefined) {
-        setrowData(res.data);
+        setRowData(res.data);
       } else {
-        setrowData([]);
+        setRowData([]);
       }
     });
   }, [Counter]);
@@ -70,7 +70,7 @@ function UserTable(props) {
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onEdit(params)}
             data-bs-toggle="modal"
-            data-bs-target="#AdduserModal"
+            data-bs-target="#AddUserModal"
           >
             <i className="fa-solid fa-pen-to-square text-primary"></i>
           </button>
@@ -78,7 +78,7 @@ function UserTable(props) {
             params.data.userType!=='admin'?
             <button
             data-bs-toggle="modal"
-            data-bs-target="#deleteblogModal"
+            data-bs-target="#deleteBlogModal"
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onDelete(params)}
           >
@@ -95,6 +95,7 @@ function UserTable(props) {
       sortable: true,
       filter: true,
       minWidth: 200,
+      resizable:true,
       flex: 1,
     }),
     []
@@ -105,10 +106,10 @@ function UserTable(props) {
     setEditData(params.data);
   };
   const onDelete = (params) => {
-    setDeleteitem(params.data._id);
+    setDeleteItem(params.data._id);
   };
-  const onDeleteitem = async () => {
-    await deleteuserfromserver(Deleteitem).then((res) => {
+  const onDeleteItem = async () => {
+    await deleteUserFromServer(deleteItem).then((res) => {
       setTimeout(() => {
         setCounter(Counter + 1);
       }, 100);
@@ -124,7 +125,7 @@ function UserTable(props) {
     setEmail("");
     setPassword("");
   };
-  const onformSubmitHandler = async (e) => {
+  const onFormSubmitHandler = async (e) => {
     e.preventDefault();
     let userBtn = document.getElementById("user-btn");
     if (userBtn.textContent === "Add") {
@@ -149,7 +150,7 @@ function UserTable(props) {
         password: Password,
         userType: userType,
       };
-      editusertoserver(obj).then((res) => {
+      editUserToServer(obj).then((res) => {
         setTimeout(() => {
           setCounter(Counter + 1);
         }, 100);
@@ -160,7 +161,7 @@ function UserTable(props) {
     setEmail("");
     setPassword("");
   };
-  const optionlist = ["user", "admin"];
+  const optionList = ["user", "admin"];
   return (
     <>
       <div
@@ -171,7 +172,7 @@ function UserTable(props) {
           type="button"
           className="btn bg-teal m-3"
           data-bs-toggle="modal"
-          data-bs-target="#AdduserModal"
+          data-bs-target="#AddUserModal"
           onClick={onAddUserHandler}
         >
           Add New User
@@ -179,13 +180,12 @@ function UserTable(props) {
 
         <div
           className="modal fade"
-          id="AdduserModal"
+          id="AddUserModal"
           tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
           <div className="modal-dialog">
-            <form onSubmit={(e) => onformSubmitHandler(e)}>
+            <form onSubmit={(e) => onFormSubmitHandler(e)}>
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title" id="user-label">
@@ -213,7 +213,7 @@ function UserTable(props) {
                   </div>
                   <div className="mb-3">
                     <label htmlFor="lname" className="form-label">
-                      Lastname
+                      Last Name
                     </label>
                     <input
                       type="text"
@@ -236,7 +236,7 @@ function UserTable(props) {
                     />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="usertype" className="form-label">
+                    <label htmlFor="userType" className="form-label">
                       User Type
                     </label>
                     <select
@@ -244,10 +244,10 @@ function UserTable(props) {
                       aria-label="Default select example"
                       onChange={(e) => setUserType(e.target.value)}
                       value={userType || ""}
-                      id="blog-usertype"
+                      id="blog-userType"
                       required
                     >
-                      {optionlist.map((item, pos) => {
+                      {optionList.map((item, pos) => {
                         return (
                           <option key={pos} value={item}>
                             {item}
@@ -266,7 +266,7 @@ function UserTable(props) {
                     Close
                   </button>
                   <button
-                    disabled={Disabledbtn}
+                    disabled={disabledBtn}
                     type="submit"
                     data-bs-dismiss="modal"
                     className="btn bg-teal"
@@ -281,9 +281,8 @@ function UserTable(props) {
         </div>
         <div
           className="modal fade"
-          id="deleteblogModal"
+          id="deleteBlogModal"
           tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
           <div className="modal-dialog">
@@ -314,7 +313,7 @@ function UserTable(props) {
                   type="button"
                   data-bs-dismiss="modal"
                   className="btn btn-danger"
-                  onClick={() => onDeleteitem()}
+                  onClick={() => onDeleteItem()}
                 >
                   Delete
                 </button>

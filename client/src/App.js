@@ -29,8 +29,8 @@ function App() {
       <Routes>
 
         <Route path='/login' element={<Login />} />
-
         <Route path='/register' element={<Register />} />
+        
         <Route path='/' element={
           <ProtectedRoute>
             <Home />
@@ -39,7 +39,7 @@ function App() {
             <ProtectedRoute>
               <Main />
             </ProtectedRoute>} />
-          <Route path='/blogList' element={
+          <Route path='/BlogList' element={
             <UserProtected>
               <BlogList />
             </UserProtected>} />
@@ -57,7 +57,7 @@ function App() {
             </AdminProtected>} />
           <Route path='/profile' element={
             <ProtectedRoute>
-              <Profile/>
+              <Profile />
             </ProtectedRoute>} />
 
           <Route path='*' element={
@@ -66,7 +66,7 @@ function App() {
             </ProtectedRoute>} />
 
         </Route>
-        <Route path='reset/:id' element={<ResetPass/>} />
+        <Route path='reset/:id' element={<ResetPass />} />
       </Routes>
     </BrowserRouter>
   );

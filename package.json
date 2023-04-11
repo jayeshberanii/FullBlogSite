@@ -1,0 +1,21 @@
+{
+  "name": "fullblogsite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build":"cd server && npm install && cd ../client && npm install && npm run build",
+    "start":"cd server && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayeshberanii/FullBlogSite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jayeshberanii/FullBlogSite/issues"
+  },
+  "homepage": "https://github.com/jayeshberanii/FullBlogSite#readme"
+}
