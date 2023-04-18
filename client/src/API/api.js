@@ -152,7 +152,7 @@ export const resetPassword = async (User) => {
       var templateParams = {
         from_name: 'jayesh berani',
         to_name: User?.fname,
-        message: `http://localhost:3000/reset/${res.data.tokenId}`,
+        message: `https://blog-site-client-by-jayesh.onrender.com/reset/${res.data.tokenId}`,
         reply_to: User?.email
       };
     
