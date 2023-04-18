@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
-import { loginUser, signInWithGoogle } from "../../API/api";
+import { loginUser } from "../../API/api";
 import { setUserInfo } from "../../Redux/Slices/userInfoSlice";
 
 function Login() {
@@ -25,11 +25,11 @@ function Login() {
         }
         
     }
-    const signInWithGoogleHandler=async()=>{
-        const response=await signInWithGoogle()
-        console.log(response);
-        // window.open('http://localhost:4000/')
-    }
+    // const signInWithGoogleHandler=async()=>{
+    //     const response=await signInWithGoogle()
+    //     console.log(response);
+    //     // window.open('http://localhost:4000/')
+    // }
     return (
     <>
         {!isValid?
@@ -51,10 +51,10 @@ function Login() {
                         <div className="mt-2">
                             <label htmlFor="exampleInputPassword1" className="form-label">Not user <Link to='/Register'><p className="text-primary">Register user</p></Link></label>
                         </div>
-                        <div className="mb-3 d-flex justify-content-center">
+                        {/* <div className="mb-3 d-flex justify-content-center">
                             
                             <button type="button" onClick={()=>signInWithGoogleHandler()} className="btn btn-light shadow d-block w-100"><img className="img me-2 mb-1" height={20} src={'https://www.vectorlogo.zone/logos/google/google-icon.svg'} alt='GoogleLogo' />SignIn with Google</button>
-                        </div>
+                        </div> */}
                     </form>
                 </div>
             </div>
