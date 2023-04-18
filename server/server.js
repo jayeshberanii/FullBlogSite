@@ -34,9 +34,7 @@ app.get('/auth/google/callback',
         successRedirect:'/'
     })
 );
-app.get('/', (req, res) => {
-    res.status(200).json({ msg: "signin success", user: req.user })
-})
+
 
 app.use('/api/users', require('./routes/userRoute'))
 app.use('/api/todos', require('./routes/todoRoute'))
