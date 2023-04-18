@@ -2,7 +2,7 @@ import axios from "axios";
 import emailjs from '@emailjs/browser'
 
 const instance = axios.create({
-  baseURL: "https://blog-site-by-jayesh.onrender.com/api"
+  baseURL: "https://blog-site-server-by-jayesh.onrender.com/api"
 });
 
 export const registerUser = async (obj) => {
