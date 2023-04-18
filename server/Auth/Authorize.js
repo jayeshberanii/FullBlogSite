@@ -6,7 +6,7 @@ const Authorize=(req,res,next)=>{
         res.status(401).json({msg:"not Authorized"})
     }
     try {
-        const decoded=jwt.verify(token,process.env.SECRET_KEY)
+        const decoded=jwt.verify(token,process.env.ACCESS_TOKEN)
         req.user=decoded.user
         next()
         
