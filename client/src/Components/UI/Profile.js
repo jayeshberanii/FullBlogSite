@@ -77,7 +77,7 @@ function Profile() {
                             <input type="text" className="form-control" id="userType" value={userType} readOnly />
                         </div>
                         <button type="button" className="float-end btn btn-primary ms-4" id="profile-btn" onClick={() => updateHandler()}>Update</button>
-                        <button type="button" className="float-end btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#sentMail" data-bs-whatever="@mdo">Change Password</button>
+                        <button type="button" className="float-end btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#sentMail" data-bs-whatever="@mdo">Forget Password</button>
                     </form>
                 </div>
             </div>

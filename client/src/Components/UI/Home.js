@@ -10,7 +10,7 @@ function Home(props) {
   });
   useEffect(() => {
     if (UserInfo?.userType === "admin") {
-      setHeaderOptions(["user", "blogs", "myBlogs"]);
+      setHeaderOptions(["user", "blogs"]);
     } else if (UserInfo?.userType === "user") {
       setHeaderOptions(["BlogList", "myBlogs"]);
     } else {

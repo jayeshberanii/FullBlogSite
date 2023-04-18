@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import { addBlogToServer, deleteBlogFromServer, editBlogToServer, getAllBlogs } from "../../API/api";
@@ -92,26 +92,30 @@ function BlogTable() {
     //   })
   };
   const [columnDefs] = useState([
-    { headerName: "CreatedBy", field: 'user.fname' },
+    { headerName: "CreatedBy", field: 'user.fname',editable: false},
     { field: "title", },
-    { field: "category", },
+    { field: "category",cellEditor: 'agSelectCellEditor',
+    cellEditorParams: {
+      values:optionList,
+    }, },
     { field: "description", minWidth: 400 },
 
     {
       field: "Action",
       sortable: false,
       filter: false,
+      editable: false,
 
       cellRendererFramework: (params) => (
         <div className="">
-          <button
+          {/* <button
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onEdit(params)}
             data-bs-toggle="modal"
             data-bs-target="#AddBlogModal"
           >
             <i className="fa-solid fa-pen-to-square text-primary"></i>
-          </button>
+          </button> */}
 
           <button
             data-bs-toggle="modal"
@@ -129,7 +133,8 @@ function BlogTable() {
     sortable: true,
     filter: true,
     editable: true,
-    resizable:true,
+    resizable: true,
+
     flex: 1,
     minWidth: 150,
   }), []);
@@ -171,10 +176,17 @@ function BlogTable() {
     setTitle(" ");
     setDescription(" ");
   };
+
+  const onRowValueChanged = useCallback(async (event) => {
+    var data = event.data;
+    console.log(data);
+    const { category, title, description, _id: blogId } = data
+    await editBlogToServer({ category, title, description, blogId })
+  }, []);
   return (
     <>
 
-      <div className="center-align p-5">
+      <div className="center-align p-5" style={{ height: "400px", width: "100wh" }}>
         <div
           className="ag-theme-alpine "
           style={{ height: "400px", width: "100wh" }}
@@ -325,6 +337,12 @@ function BlogTable() {
             rowData={rowData}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
+            editType={'fullRow'}
+            paginationAutoPageSize={true}
+            pagination={true}
+            paginationPageSize={7}
+            onRowValueChanged={onRowValueChanged}
+            stopEditingWhenCellsLoseFocus={true}
           ></AgGridReact>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import {
@@ -95,26 +95,30 @@ function PersonalBlog() {
     //   })
   };
   const [columnDefs] = useState([
-    { headerName: "CreatedBy", field: "user.fname" },
+    { headerName: "CreatedBy", field: "user.fname" ,editable:false},
     { field: "title" },
-    { field: "category" },
+    { field: "category" ,cellEditor: 'agSelectCellEditor',
+    cellEditorParams: {
+      values:optionlist,
+    },},
     { field: "description", minWidth: 400 },
 
     {
       field: "Action",
       sortable: false,
       filter: false,
+      editable:false,
 
       cellRendererFramework: (params) => (
         <div className="">
-          <button
+          {/* <button
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onEdit(params)}
             data-bs-toggle="modal"
             data-bs-target="#AddBlogModal"
           >
             <i className="fa-solid fa-pen-to-square text-primary"></i>
-          </button>
+          </button> */}
 
           <button
             data-bs-toggle="modal"
@@ -185,6 +189,13 @@ function PersonalBlog() {
     setTitle(" ");
     setDescription(" ");
   };
+
+  const onRowValueChanged = useCallback(async (event) => {
+    var data = event.data;
+    const { category, title, description, _id: blogId } = data
+    await editBlogToServer({ category, title, description, blogId })
+  }, []);
+
   return (
     <>
       <div className="center-align p-5">
@@ -344,6 +355,12 @@ function PersonalBlog() {
             rowData={rowData}
             columnDefs={columnDefs}
             defaultColDef={defaultColDef}
+            editType={'fullRow'}
+            paginationAutoPageSize={true}
+            pagination={true}
+            paginationPageSize={7}
+            onRowValueChanged={onRowValueChanged}
+            stopEditingWhenCellsLoseFocus={true}
           ></AgGridReact>
         </div>
       </div>

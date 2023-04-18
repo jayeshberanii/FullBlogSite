@@ -12,12 +12,7 @@ export const registerUser = async (obj) => {
     .catch((err) => console.log(err.message));
 };
 
-export const deleteUser = async (id) => {
-  await axios
-    .post(`http://localhost:4000/users/${id}`)
-    .then(console.log("deleted user successfully"))
-    .catch((err) => console.log(err.message));
-};
+
 
 export const loginUser = async (obj) => {
   const response = await instance.post("/users/login", obj);
@@ -90,17 +85,7 @@ export const deleteBlogFromServer = async (id) => {
   return response
 };
 
-//get all users
-export const getuserBlogs = async (id) => {
-  const response = await axios.get(`http://localhost:4000/blogs/?userid=${id}`);
-  if (response.data.length > 0) {
-    console.log("fetch user successfully");
-    console.log("userblogs", response.data);
-    return response;
-  } else {
-    console.log("no user found");
-  }
-};
+
 
 //get personal blogs
 export const getPersonalBlogs = async () => {
@@ -191,14 +176,33 @@ export const expireLink=async(resetId)=>{
 }
 
 //sign in with google
-export const signInWithGoogle=async()=>{
-  try {
-   const response=await axios.get('http://localhost:4000/auth/google',{
-    withCredentials: true
-   })
-   return response
-  } catch (error) {
-    console.log(error.message);
-    return error.message
-  }
-}
+// export const signInWithGoogle=async()=>{
+//   try {
+//    const response=await axios.get('http://localhost:4000/auth/google',{
+//     withCredentials: true
+//    })
+//    return response
+//   } catch (error) {
+//     console.log(error.message);
+//     return error.message
+//   }
+// }
+
+// export const deleteUser = async (id) => {
+//   await axios
+//     .post(`http://localhost:4000/users/${id}`)
+//     .then(console.log("deleted user successfully"))
+//     .catch((err) => console.log(err.message));
+// };
+
+//get all users
+// export const getuserBlogs = async (id) => {
+//   const response = await axios.get(`http://localhost:4000/blogs/?userid=${id}`);
+//   if (response.data.length > 0) {
+//     console.log("fetch user successfully");
+//     console.log("userblogs", response.data);
+//     return response;
+//   } else {
+//     console.log("no user found");
+//   }
+// };

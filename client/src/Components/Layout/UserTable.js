@@ -1,5 +1,5 @@
 import { AgGridReact } from "ag-grid-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   deleteUserFromServer,
   editUserToServer,
@@ -23,7 +23,7 @@ function UserTable(props) {
     if (
       Fname !== "" &&
       Lname !== undefined &&
-      Email !== ""       
+      Email !== ""
     ) {
       setDisabledBtn(false);
     } else {
@@ -54,11 +54,18 @@ function UserTable(props) {
     setEditCounter("");
   }, [editData, editCounter]);
 
+  const optionList=['admin','user']
+
   const [columnDefs] = useState([
     { field: "fname" },
     { field: "lname" },
     { field: "email" },
-    { field: "userType" },
+    {
+      field: "userType", editable: true, cellEditor: 'agSelectCellEditor',
+      cellEditorParams: {
+        values: optionList,
+      }
+    },
     {
       field: "Action",
       maxWidth: 200,
@@ -66,26 +73,26 @@ function UserTable(props) {
       filter: false,
       cellRendererFramework: (params) => (
         <div className="">
-          <button
+          {/* <button
             className="ms-2 mb-3 border-0 bg-none"
             onClick={() => onEdit(params)}
             data-bs-toggle="modal"
             data-bs-target="#AddUserModal"
           >
             <i className="fa-solid fa-pen-to-square text-primary"></i>
-          </button>
+          </button> */}
           {
-            params.data.userType!=='admin'?
-            <button
-            data-bs-toggle="modal"
-            data-bs-target="#deleteBlogModal"
-            className="ms-2 mb-3 border-0 bg-none"
-            onClick={() => onDelete(params)}
-          >
-            <i className="fa-solid fa-trash text-danger"></i>
-          </button>:<></>
+            params.data.userType !== 'admin' ?
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#deleteBlogModal"
+                className="ms-2 mb-3 border-0 bg-none"
+                onClick={() => onDelete(params)}
+              >
+                <i className="fa-solid fa-trash text-danger"></i>
+              </button> : <></>
           }
-          
+
         </div>
       ),
     },
@@ -95,7 +102,7 @@ function UserTable(props) {
       sortable: true,
       filter: true,
       minWidth: 200,
-      resizable:true,
+      resizable: true,
       flex: 1,
     }),
     []
@@ -161,7 +168,12 @@ function UserTable(props) {
     setEmail("");
     setPassword("");
   };
-  const optionList = ["user", "admin"];
+
+  const onRowValueChanged = useCallback(async (event) => {
+    var data = event.data;
+    editUserToServer({_id:data._id,userType:data.userType})
+  }, []);
+  
   return (
     <>
       <div
@@ -325,6 +337,11 @@ function UserTable(props) {
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
+          paginationAutoPageSize={true}
+          pagination={true}
+          paginationPageSize={7}
+          onCellValueChanged={onRowValueChanged}
+          stopEditingWhenCellsLoseFocus={true}
         ></AgGridReact>
       </div>
       :

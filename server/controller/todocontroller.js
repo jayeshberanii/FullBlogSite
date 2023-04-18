@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 //get todos
 const getTodos = async (req, res) => {
   try {
-    const todos = await TODOS.find().populate("user", "fname lname");
+    const todos = await TODOS.find().skip().limit().populate("user", "fname lname");
     res.status(200).json(todos);
   } catch (error) {
     console.log(error.message);
@@ -14,14 +14,14 @@ const getTodos = async (req, res) => {
 
 //personal todos    
 const getPersonalTodos = async (req, res) => {
-    try {
-      const todos = await TODOS.find({user:req.user}).populate("user", "fname lname");  
-      res.status(200).json(todos);
-    } catch (error) {
-      console.log(error.message);
-      res.status(500).json(error.message);
-    }
-  };
+  try {
+    const todos = await TODOS.find({ user: req.user }).populate("user", "fname lname");
+    res.status(200).json(todos);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json(error.message);
+  }
+};
 
 
 //get todo
@@ -52,7 +52,7 @@ const createTodo = async (req, res) => {
     if (!user) {
       res.status(404).json({ msg: "user not Found!" });
     } else {
-      const { title, description,category } = req.body.data;
+      const { title, description, category } = req.body.data;
       const todo = new TODOS({
         title,
         category,
@@ -85,9 +85,7 @@ const updateTodo = async (req, res) => {
         const _todoid = req.params.id;
         const todo = await TODOS.findById(_todoid);
 
-        if (todo?.user?.toString() !== req?.user?.toString()) {
-          res.status(404).json({ msg: "todo not accessed!" });
-        } else {
+        if (todo?.user?.toString() === req?.user?.toString() || user.userType === 'admin') {
           todo.title = title || todo.title;
           todo.description = description || todo.description;
           todo.category = category || todo.category;
@@ -95,6 +93,8 @@ const updateTodo = async (req, res) => {
           res
             .status(200)
             .json({ msg: "todo updated successfully", todo: todo });
+        } else {
+          res.status(404).json({ msg: "todo not accessed!" });
         }
       }
     } else {
@@ -108,15 +108,15 @@ const updateTodo = async (req, res) => {
 
 //delete todo
 const deleteTodo = async (req, res) => {
-    
-//   const user = await User.findById(req.user);
+
+  //   const user = await User.findById(req.user);
   try {
     // if (!user) {
     //   res.status(404).json({ msg: "user not Found!" });
     // } else {
-      const _todoid = req.params.id;
-      await TODOS.deleteOne({ _id: _todoid });
-      res.status(200).json({ msg: "todo deleted successfully" });
+    const _todoid = req.params.id;
+    await TODOS.deleteOne({ _id: _todoid });
+    res.status(200).json({ msg: "todo deleted successfully" });
     // }
   } catch (error) {
     console.log(error.message);
