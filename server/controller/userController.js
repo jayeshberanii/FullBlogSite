@@ -137,27 +137,29 @@ const updateUserDetails = async (req, res) => {
 
 //updateUserPassword
 const updateUserPassword = async (req, res) => {
-  const { password,userId } = req.body;
+//   const { password,userId } = req.body;
   try {
-    const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).json({ msg: "User not Found!",isupdated:false });
-    } else {
-      if (!password) {
-        res.status(200).json({ msg: "password field is empty",isupdated:false });
-      } else {
-        const isMatch = await Bcrypt.compare(password, user.password);
-        if (isMatch) {
-          res.status(200).json({ msg: "You have entered current password!",isupdated:false });
-        } else {
-          const salt = await Bcrypt.genSalt(10);
-          const hashpass = await Bcrypt.hash(password, salt);
-          user.password = hashpass || user.password;
-          await user.save();
-          res.status(200).json({ msg: "password updated",isupdated:true });
-        }
-      }
-    }
+    console.log(req.body)
+    res.status(200).json("success")
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       res.status(404).json({ msg: "User not Found!",isupdated:false });
+//     } else {
+//       if (!password) {
+//         res.status(200).json({ msg: "password field is empty",isupdated:false });
+//       } else {
+//         const isMatch = await Bcrypt.compare(password, user.password);
+//         if (isMatch) {
+//           res.status(200).json({ msg: "You have entered current password!",isupdated:false });
+//         } else {
+//           const salt = await Bcrypt.genSalt(10);
+//           const hashpass = await Bcrypt.hash(password, salt);
+//           user.password = hashpass || user.password;
+//           await user.save();
+//           res.status(200).json({ msg: "password updated",isupdated:true });
+//         }
+//       }
+//     }
   } catch (error) {
     console.error(error.message);
     res.status(500).json(error.message);
